@@ -1,7 +1,14 @@
-//
-//  LoginViewModel.swift
-//  Calendar
-//
-//  Created by Данил Толстиков on 27.11.2024.
-//
+protocol LoginViewModelProtocol {
+    var updateViewData: ((UserData) -> ())? { get set}
+    var userData: UserData? {get set}
+//    var router
+//    var networkService
+}
 
+final class LoginViewModel: LoginViewModelProtocol {
+    var updateViewData: ((UserData) -> ())?
+    var userData: UserData?
+    
+    
+    
+}
