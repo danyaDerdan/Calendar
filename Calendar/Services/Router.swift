@@ -7,6 +7,7 @@ protocol RouterProtocol {
     func ititialVC()
     func popToRoot()
     func showLoginModule()
+    func showRegisterModule()
 }
 
 final class Router: RouterProtocol {
@@ -23,11 +24,15 @@ final class Router: RouterProtocol {
         navigationController.viewControllers = [builder.createLaunchModule(router: self)]
     }
     
+    func popToRoot() {
+        navigationController.popToRootViewController(animated: true)
+    }
+    
     func showLoginModule() { //Redo funcs to every module using builder
         navigationController.pushViewController(builder.createLoginModule(router: self), animated: true)
     }
     
-    func popToRoot() {
-        navigationController.popToRootViewController(animated: true)
+    func showRegisterModule() {
+        navigationController.pushViewController(builder.createRegisterModule(router: self), animated: true)
     }
 }

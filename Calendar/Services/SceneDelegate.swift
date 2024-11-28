@@ -1,10 +1,3 @@
-//
-//  SceneDelegate.swift
-//  Calendar
-//
-//  Created by Данил Толстиков on 27.11.2024.
-//
-
 import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
