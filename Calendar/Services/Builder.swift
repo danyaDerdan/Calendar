@@ -17,11 +17,16 @@ final class Builder: BuilderProtocol {
     }
     
     func createLoginModule(router: RouterProtocol) -> UIViewController {
-        return LoginViewController()
+        return UIViewController()
     }
     
-    func createRegisterModule(router: any RouterProtocol) -> UIViewController {
-        return UIViewController()
+    func createRegisterModule(router: RouterProtocol) -> UIViewController {
+        let view = EntranceViewController()
+        let viewModel = RegisterViewModel()
+        viewModel.router = router
+        view.buttonTitle = "Register"
+        view.viewModel = viewModel
+        return view
     }
 }
 

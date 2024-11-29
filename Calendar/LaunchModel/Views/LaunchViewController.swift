@@ -2,7 +2,7 @@ import UIKit
 
 class LaunchViewController: UIViewController {
 
-    public var viewModel: LaunchViewModel!
+    public var viewModel: LaunchViewModelProtocol!
     
     lazy var titleLabel = createLabel()
     lazy var loginButton = createButton(text: "Login", backgroundColor: .systemPurple, textColor: .white)
@@ -13,7 +13,7 @@ class LaunchViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         setUpUI()
-        //addTargets()
+        addTargets()
     }
 }
 
