@@ -4,6 +4,7 @@ protocol BuilderProtocol {
     func createLaunchModule(router: RouterProtocol) -> UIViewController
     func createLoginModule(router: RouterProtocol) -> UIViewController
     func createRegisterModule(router: RouterProtocol) -> UIViewController
+    func createYearModule(router: RouterProtocol) -> UIViewController
 }
 
 final class Builder: BuilderProtocol {
@@ -25,6 +26,16 @@ final class Builder: BuilderProtocol {
         let viewModel = RegisterViewModel()
         viewModel.router = router
         view.buttonTitle = "Register"
+        view.viewModel = viewModel
+        return view
+    }
+    
+    func createYearModule(router: RouterProtocol) -> UIViewController {
+        let view = YearViewController()
+        let viewModel = YearViewModel()
+        let dataManager = DataManager()
+        viewModel.router = router
+        viewModel.dataManager = dataManager
         view.viewModel = viewModel
         return view
     }

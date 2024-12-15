@@ -26,6 +26,7 @@ final class EntranceView: UIView {
             passwordTextField.layer.borderColor = UIColor.systemGreen.cgColor
             invalidLoginLabel.textColor = .systemRed.withAlphaComponent(0)
             invalidPasswordLabel.textColor = .systemRed.withAlphaComponent(0)
+            
         case .invalid:
             loginTextField.layer.borderColor = UIColor.systemRed.cgColor
             passwordTextField.layer.borderColor = UIColor.systemRed.cgColor

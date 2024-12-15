@@ -18,10 +18,14 @@ final class EntranceViewController: UIViewController {
     func updateView() {
         viewModel.updateViewData = { [weak self] (viewData) in
             self?.textFieldsView.viewData = viewData
+            switch viewData {
+            case .valid:
+                self?.viewModel.router?.showYearModule()
+            default:
+                break
+            }
         }
     }
-    
-
 }
 
 private extension EntranceViewController {

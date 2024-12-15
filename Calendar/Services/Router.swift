@@ -8,6 +8,7 @@ protocol RouterProtocol {
     func popToRoot()
     func showLoginModule()
     func showRegisterModule()
+    func showYearModule()
 }
 
 final class Router: RouterProtocol {
@@ -21,7 +22,7 @@ final class Router: RouterProtocol {
     }
     
     func ititialVC() {
-        navigationController.viewControllers = [builder.createLaunchModule(router: self)]
+        navigationController.viewControllers = [builder.createYearModule(router: self)]
     }
     
     func popToRoot() {
@@ -34,5 +35,9 @@ final class Router: RouterProtocol {
     
     func showRegisterModule() {
         navigationController.pushViewController(builder.createRegisterModule(router: self), animated: true)
+    }
+    
+    func showYearModule() {
+        navigationController.pushViewController(builder.createYearModule(router: self), animated: true)
     }
 }
