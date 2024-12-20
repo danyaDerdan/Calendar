@@ -70,7 +70,6 @@ extension YearCell: UICollectionViewDelegate, UICollectionViewDataSource {
         else {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "DayCell", for: indexPath) as? DayCell else { return UICollectionViewCell() }
             cell.configure(with: days[indexPath.section][indexPath.row-cellsIndexStart[indexPath.section]])
-            print(cellsIndexStart)
             return cell
         }
     }

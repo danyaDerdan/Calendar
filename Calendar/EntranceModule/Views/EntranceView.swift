@@ -90,5 +90,6 @@ extension EntranceView {
             stackView.centerXAnchor.constraint(equalTo: centerXAnchor)
             ])
     }
+
     
 }

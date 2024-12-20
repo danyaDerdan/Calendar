@@ -17,7 +17,7 @@ final class YearViewController: UIViewController {
     }
 
     @objc func plusButtonTapped() {
-        
+        viewModel.router.showEventModule()
     }
     
 }

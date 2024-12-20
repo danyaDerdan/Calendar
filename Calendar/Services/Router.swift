@@ -9,6 +9,7 @@ protocol RouterProtocol {
     func showLoginModule()
     func showRegisterModule()
     func showYearModule()
+    func showEventModule()
 }
 
 final class Router: RouterProtocol {
@@ -39,5 +40,9 @@ final class Router: RouterProtocol {
     
     func showYearModule() {
         navigationController.pushViewController(builder.createYearModule(router: self), animated: true)
+    }
+    
+    func showEventModule() {
+        navigationController.present(builder.createEventModule(router: self), animated: true)
     }
 }

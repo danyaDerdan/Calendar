@@ -12,6 +12,7 @@ final class EntranceViewController: UIViewController {
         view.backgroundColor = .white
         setUpView()
         updateView()
+        hideKeybordWhenTappedAround()
         button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
     }
     
@@ -28,7 +29,7 @@ final class EntranceViewController: UIViewController {
     }
 }
 
-private extension EntranceViewController {
+extension EntranceViewController : UITextFieldDelegate {
     
     func setUpView() {
         textFieldsView = EntranceView()
@@ -53,12 +54,28 @@ private extension EntranceViewController {
         button.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8),
         button.heightAnchor.constraint(equalToConstant: 80)
         ])
+        textFieldsView.loginTextField.delegate = self
         return button
+    }
+    
+    func hideKeybordWhenTappedAround() {
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
+        tapGestureRecognizer.cancelsTouchesInView = false
+        view.addGestureRecognizer(tapGestureRecognizer)
     }
     
     @objc func buttonTapped() {
         let (login, password) = (textFieldsView.loginTextField.text ?? "", textFieldsView.passwordTextField.text ?? "")
         viewModel.validateData(data: UserData.Data(login: login, password: password))
+    }
+    
+    @objc func hideKeyboard() {
+        view.endEditing(true)
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        hideKeyboard()
+        return true
     }
 }
 
