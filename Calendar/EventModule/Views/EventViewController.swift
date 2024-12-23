@@ -281,5 +281,7 @@ extension EventViewController: UITextFieldDelegate{
                                                                 start: startDatePicker.date,
                                                                 end: endDatePicker.date,
                                                                 notification: notificationSwitch.isOn))
+        viewModel.reloadCells()
+        exit()
     }
 }

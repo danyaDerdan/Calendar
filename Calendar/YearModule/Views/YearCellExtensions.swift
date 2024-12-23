@@ -9,11 +9,11 @@ extension YearCell {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.register(DayCell.self, forCellWithReuseIdentifier: "DayCell")
         collectionView.register(EmptyCell.self, forCellWithReuseIdentifier: "EmptyCell")
+        collectionView.register(CurrentDayCell.self, forCellWithReuseIdentifier: "CurrentDayCell")
         collectionView.register(SectionHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "Header")
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.scrollsToTop = true
         addSubview(collectionView)
-        
         
         return collectionView
     }
@@ -21,9 +21,9 @@ extension YearCell {
     func createYearLabel() -> UILabel {
         let label = UILabel()
         label.textColor = .black
-        label.text = String(year)
         label.font = .boldSystemFont(ofSize: 30)
         label.textAlignment = .center
+        label.text = String(year!)
         addSubview(label)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -36,7 +36,7 @@ extension YearCell {
             label.textColor = .black
             label.font = .systemFont(ofSize: 12)
             label.textAlignment = .center
-            label.text = viewModel.dataManager.getDayOfWeek(day: i)
+            label.text = viewModel!.dataManager.getDayOfWeek(day: i)
             arr.append(label)
         }
         return arr
@@ -53,31 +53,41 @@ extension YearCell {
 }
 
 extension YearCell: UICollectionViewDelegate, UICollectionViewDataSource {
+    
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return days.count
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return viewModel.dataManager.getDaysInMonth(year: year, month: section) + cellsIndexStart[section]
+        return viewModel!.dataManager.getDaysInMonth(year: year!, month: 12 - days.count + section) + cellsIndexStart[12 - days.count + section]
     }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if indexPath.row < cellsIndexStart[indexPath.section] {
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell { //во вью модель создание
+        if indexPath.row < cellsIndexStart[12 - days.count + indexPath.section] {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "EmptyCell", for: indexPath) as? EmptyCell else { return UICollectionViewCell() }
             cell.setUp()
             return cell
         }
         else {
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "DayCell", for: indexPath) as? DayCell else { return UICollectionViewCell() }
-            cell.configure(with: days[indexPath.section][indexPath.row-cellsIndexStart[indexPath.section]])
-            return cell
-        }
+            let formatter = DateFormatter()
+            formatter.dateFormat = "d.M.yyyy"
+            if formatter.string(from: Date()) == days[indexPath.section][indexPath.row-cellsIndexStart[12 - days.count + indexPath.section]].date {
+                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CurrentDayCell", for: indexPath) as? CurrentDayCell else { return UICollectionViewCell() }
+                cell.configure(with: days[indexPath.section][indexPath.row-cellsIndexStart[12 - days.count + indexPath.section]])
+                return cell
+            }
+            else {
+                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "DayCell", for: indexPath) as? DayCell else { return UICollectionViewCell() }
+                cell.configure(with: days[indexPath.section][indexPath.row-cellsIndexStart[12 - days.count + indexPath.section]])
+                return cell
+            }
+        } 
     }
 }
 
 extension YearCell: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: collectionView.frame.width / 7 - 2, height: 100)
+        return CGSize(width: collectionView.frame.width / 7 - 2, height: 80)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
@@ -91,7 +101,7 @@ extension YearCell: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         guard kind == UICollectionView.elementKindSectionHeader else {return UICollectionReusableView()}
         let sectionHeader = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "Header", for: indexPath) as! SectionHeader
-        sectionHeader.label.text = viewModel.dataManager.getMonthName(month: indexPath.section)
+        sectionHeader.label.text = viewModel!.dataManager.getMonthName(month: 12 - days.count + indexPath.section)
         return sectionHeader
     }
     

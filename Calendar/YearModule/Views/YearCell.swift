@@ -2,31 +2,38 @@ import UIKit
 
 final class YearCell: UICollectionViewCell {
     
-    var viewModel: YearViewModelProtocol!
+    var viewModel: YearViewModelProtocol?
     
-    var firstDayOfYear: Int!
+    var firstDayOfYear: Int?
     var year: Int!
     
-    lazy var days = viewModel.getDays(of: year)
-    lazy var cellsIndexStart = viewModel.dataManager.getCellsStartIndex(year: year)
+    var days: [[Day]]!
+    var cellsIndexStart : [Int]!
     
-    lazy var collectionView = createCollectionView()
-    lazy var yearLabel = createYearLabel()
+    var collectionView: UICollectionView!
+    var yearLabel: UILabel!
     lazy var dayOfWeekLabels = createLabels()
     lazy var weekStackView = createWeekStackView()
     
-    func configure(viewModel: YearViewModelProtocol, year: Int, firstDayOfYear: Int) {
+    public func configure(viewModel: YearViewModelProtocol, year: Int, firstDayOfYear: Int) {
         self.viewModel = viewModel
         self.year = year
         self.firstDayOfYear = firstDayOfYear
-        yearLabel.text = String(year)
-        collectionView.delegate = self
-        collectionView.dataSource = self
+
         setUp()
+        
     }
     
-    func setUp() {
+    private func setUp() {
         backgroundColor = .systemGray6
+        days = viewModel!.getDays(of: year)
+        cellsIndexStart = viewModel!.dataManager.getCellsStartIndex(year: year!)
+        yearLabel = createYearLabel()
+        collectionView = createCollectionView()
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        print("year \(year)")
+       
         NSLayoutConstraint.activate([
         collectionView.topAnchor.constraint(equalTo: topAnchor, constant: 80),
         collectionView.bottomAnchor.constraint(equalTo: bottomAnchor),
@@ -39,9 +46,15 @@ final class YearCell: UICollectionViewCell {
         yearLabel.bottomAnchor.constraint(equalTo: weekStackView.topAnchor, constant: -10),
         yearLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20)
         ])
-        
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        collectionView = nil
+//        year = nil
+        //print("Prepared \(year)")
+        yearLabel.text = nil
+    }
 }
 
 

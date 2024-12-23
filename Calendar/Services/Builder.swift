@@ -1,6 +1,7 @@
 import UIKit
 
 protocol BuilderProtocol {
+    var yearViewModel: YearViewModel { get set }
     func createLaunchModule(router: RouterProtocol) -> UIViewController
     func createLoginModule(router: RouterProtocol) -> UIViewController
     func createRegisterModule(router: RouterProtocol) -> UIViewController
@@ -9,6 +10,7 @@ protocol BuilderProtocol {
 }
 
 final class Builder: BuilderProtocol {
+    var yearViewModel = YearViewModel()
     
     func createLaunchModule(router: RouterProtocol) -> UIViewController {
         let view = LaunchViewController()
@@ -33,10 +35,12 @@ final class Builder: BuilderProtocol {
     
     func createYearModule(router: RouterProtocol) -> UIViewController {
         let view = YearViewController()
-        let viewModel = YearViewModel()
+        let viewModel = yearViewModel
         let dataManager = DataManager()
+        let coreDataManager = CoreDataManager()
         viewModel.router = router
         viewModel.dataManager = dataManager
+        viewModel.coreDataManager = coreDataManager
         view.viewModel = viewModel
         return view
     }
@@ -45,6 +49,7 @@ final class Builder: BuilderProtocol {
         let viewModel = EventViewModel()
         let coreDataManager = CoreDataManager()
         viewModel.coreDataManager = coreDataManager
+        viewModel.yearViewModel = yearViewModel
         let view = EventViewController()
         view.viewModel = viewModel
         return view

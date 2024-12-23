@@ -1,9 +1,11 @@
 protocol EventViewModelProtocol {
     var updateViewData : ((EventSettings) -> ())? { get set }
     var event: EventSettings.Event? { get }
+    var yearViewModel: YearViewModelProtocol! { get set }
     var coreDataManager: CoreDataManagerProtocol! { get set }
     func validateData(name: String)
     func printSavedEvents()
+    func reloadCells()
 }
 
 final class EventViewModel: EventViewModelProtocol {
@@ -11,6 +13,7 @@ final class EventViewModel: EventViewModelProtocol {
     var updateViewData: ((EventSettings) -> ())?
     var event: EventSettings.Event?
     var coreDataManager: CoreDataManagerProtocol!
+    var yearViewModel: YearViewModelProtocol!
     
     init() {
         updateViewData?(.invalid)
@@ -29,6 +32,10 @@ final class EventViewModel: EventViewModelProtocol {
         for i in coreDataManager.getEvents() {
             print(i)
         }
+    }
+    
+    func reloadCells() {
+        yearViewModel.updateViewData?()
     }
     
     

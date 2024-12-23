@@ -8,15 +8,15 @@ extension YearViewController {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.isPagingEnabled = true
         collectionView.showsHorizontalScrollIndicator = false
-        collectionView.register(YearCell.self, forCellWithReuseIdentifier: "YearCell")
-        
         view.addSubview(collectionView)
+  
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -100),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor) ])
+        collectionView.register(YearCell.self, forCellWithReuseIdentifier: "YearCell")
         
         return collectionView
     }
@@ -45,11 +45,13 @@ extension YearViewController {
 
 extension YearViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 10
+        return 9
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "YearCell", for: indexPath) as? YearCell else { return UICollectionViewCell() }
+//        print(cell)
+        
         cell.configure(viewModel: viewModel, year: indexPath.row+2024, firstDayOfYear: viewModel.dataManager.getFirstDayOfYear(year: indexPath.row+2024))
         return cell
     }
