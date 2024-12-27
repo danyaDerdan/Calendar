@@ -20,6 +20,7 @@ final class YearCell: UICollectionViewCell {
         self.year = year
         self.firstDayOfYear = firstDayOfYear
 
+
         setUp()
         
     }
@@ -32,7 +33,8 @@ final class YearCell: UICollectionViewCell {
         collectionView = createCollectionView()
         collectionView.delegate = self
         collectionView.dataSource = self
-        print("year \(year)")
+        
+        
        
         NSLayoutConstraint.activate([
         collectionView.topAnchor.constraint(equalTo: topAnchor, constant: 80),
@@ -46,11 +48,20 @@ final class YearCell: UICollectionViewCell {
         yearLabel.bottomAnchor.constraint(equalTo: weekStackView.topAnchor, constant: -10),
         yearLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20)
         ])
+        
+        let date = viewModel?.dataManager.getStringOfDate(Date()).split(separator: ".")
+        if date![2] == String(year) {
+            collectionView.setContentOffset(CGPoint(x: 0, y: 465*(Int(date![1]) ?? 1)-1), animated: true)
+        }
+        
+        
     }
     
     override func prepareForReuse() {
         super.prepareForReuse()
+        
         collectionView = nil
+        
 //        year = nil
         //print("Prepared \(year)")
         yearLabel.text = nil

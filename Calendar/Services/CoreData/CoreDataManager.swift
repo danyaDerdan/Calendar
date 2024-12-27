@@ -6,6 +6,7 @@ protocol CoreDataManagerProtocol {
     func saveContext()
     func saveEvent(_ event: EventSettings.Event)
     func getEvents() -> [EventSettings.Event]
+    func deleteEvent(event: EventSettings.Event)
 }
 
 final class CoreDataManager : CoreDataManagerProtocol{
@@ -67,5 +68,22 @@ final class CoreDataManager : CoreDataManagerProtocol{
             print("Error")
         }
         return array
+    }
+    
+    func deleteEvent(event: EventSettings.Event) {
+        var array = [EventSettings.Event]()
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Event")
+        do {
+            let results = try context.fetch(fetchRequest)
+            for result in results as! [Event] {
+                if result.name == event.name && result.startDate == event.start {
+                    context.delete(result)
+                    saveContext()
+                    break
+                }
+            }
+        } catch {
+            print("Error")
+        }
     }
 }

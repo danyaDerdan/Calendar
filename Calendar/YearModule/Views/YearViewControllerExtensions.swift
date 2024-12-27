@@ -45,12 +45,11 @@ extension YearViewController {
 
 extension YearViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 9
+        return 8
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "YearCell", for: indexPath) as? YearCell else { return UICollectionViewCell() }
-//        print(cell)
         
         cell.configure(viewModel: viewModel, year: indexPath.row+2024, firstDayOfYear: viewModel.dataManager.getFirstDayOfYear(year: indexPath.row+2024))
         return cell
@@ -67,5 +66,4 @@ extension YearViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 0
     }
-    
 }

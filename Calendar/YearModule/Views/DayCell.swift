@@ -3,33 +3,44 @@ import Foundation
 
 class DayCell: UICollectionViewCell {
     
-    lazy var button = createButton()
     
-    public func configure(with day: Day) {
+    var viewModel: YearViewModelProtocol!
+    var button: UIButton!
+    var day: Day!
+    
+    public func configure(with day: Day, viewModel: YearViewModelProtocol) {
+        button = createButton()
         button.setTitle(String(day.number), for: .normal)
+        self.viewModel = viewModel
+        self.day = day
         setup(day)
     }
     
     private func setup(_ day: Day) {
-        backgroundColor = .white
-        let formatter = DateFormatter()
-        formatter.dateFormat = "d.M.yyyy"
-        //button.addTarget(self, action: #selector(buttonTapped), for: .touchDown)
-        guard let date = formatter.date(from: "\(day.number).\(day.month).\(day.year)")?.addingTimeInterval(TimeInterval(60*60*4)) else { return }
-        if Calendar.current.isDateInWeekend(date) {
-            button.setTitleColor(.black.withAlphaComponent(0.5), for: .normal)
+        DispatchQueue.main.async {
+            self.backgroundColor = .white
+            let formatter = DateFormatter()
+            formatter.dateFormat = "d.M.yyyy"
+            self.button.addTarget(self, action: #selector(self.buttonTapped), for: .touchDown)
+            guard let date = formatter.date(from: "\(day.number).\(day.month).\(day.year)")?.addingTimeInterval(TimeInterval(60*60*4)) else { return }
+            if Calendar.current.isDateInWeekend(date) {
+                self.button.setTitleColor(.black.withAlphaComponent(0.5), for: .normal)
+            }
+            if day.isEvented { self.addCircle(on: self.button) }
         }
-        if day.isEvented {
-            addCircle(on: button) }
+        
     }
     
     @objc private func buttonTapped(sender: UIButton) {
-        sender.backgroundColor = .black.withAlphaComponent(0.05)
+        viewModel.router.showDayModule(with: day)
+        
     }
     
     override func prepareForReuse() {
         super.prepareForReuse()
         button.setTitle(nil, for: .normal)
+        button.backgroundColor = .white
+        day = nil
     }
 }
 

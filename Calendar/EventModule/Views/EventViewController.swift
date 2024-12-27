@@ -21,12 +21,18 @@ final class EventViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        viewModel.printSavedEvents()
         view.backgroundColor = .systemGray6
         setUpUI()
         updateView()
         nameTextField.delegate = self
+        descriptionTextField.delegate = self
         startDatePicker.addTarget(self, action: #selector(startDatePickerValueChanged), for: .valueChanged)
+        if let event = viewModel.event {
+            nameTextField.text = event.name
+            startDatePicker.date = event.start
+            endDatePicker.date = event.end
+            notificationSwitch.isOn = event.notification
+        }
     }
     
     func updateView() {
@@ -276,12 +282,18 @@ extension EventViewController: UITextFieldDelegate{
     }
     
     @objc func save() {
-        viewModel.coreDataManager.saveEvent(EventSettings.Event(name: nameTextField.text ?? "",
-                                                                description: descriptionTextField.text ?? "",
-                                                                start: startDatePicker.date,
-                                                                end: endDatePicker.date,
-                                                                notification: notificationSwitch.isOn))
-        viewModel.reloadCells()
+        if let event = viewModel.event {
+            viewModel.coreDataManager.deleteEvent(event: event)
+        }
+        let newEvent = EventSettings.Event(name: nameTextField.text ?? "",
+                                           description: descriptionTextField.text ?? "",
+                                           start: startDatePicker.date,
+                                           end: endDatePicker.date,
+                                           notification: notificationSwitch.isOn)
+        viewModel.coreDataManager.saveEvent(newEvent)
+        viewModel.reloadViews()
+        let notificationManager = NotificationManager()
+        notificationManager.addNotification(event: newEvent)
         exit()
     }
 }

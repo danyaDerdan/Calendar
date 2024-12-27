@@ -14,11 +14,10 @@ final class YearViewModel : YearViewModelProtocol {
     
     public func getDays(of year: Int) -> [[Day]] {
         var days = [[Day]]()
-        let firstMonth = dataManager.getFirstMonthOfYear(year: year)
-        for i in firstMonth..<12 {
+        for i in 0..<12 {
             days.append([])
             for j in 0..<dataManager.getDaysInMonth(year: year, month: i) {
-                days[i-firstMonth].append(Day(number: j+1, month: i+1, year: year, isEvented: isDayEvented(day: j+1, month: i+1, year: year)))
+                days[i].append(Day(number: j+1, month: i+1, year: year, isEvented: isDayEvented(day: j+1, month: i+1, year: year)))
             }
         }
         return days
