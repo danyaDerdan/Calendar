@@ -28,7 +28,7 @@ final class YearCell: UICollectionViewCell {
     private func setUp() {
         backgroundColor = .systemGray6
         days = viewModel!.getDays(of: year)
-        cellsIndexStart = viewModel!.dataManager.getCellsStartIndex(year: year!)
+        cellsIndexStart = viewModel!.dateManager.getCellsStartIndex(year: year!)
         yearLabel = createYearLabel()
         collectionView = createCollectionView()
         collectionView.delegate = self
@@ -49,7 +49,7 @@ final class YearCell: UICollectionViewCell {
         yearLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20)
         ])
         
-        let date = viewModel?.dataManager.getStringOfDate(Date()).split(separator: ".")
+        let date = viewModel?.dateManager.getStringOfDate(Date()).split(separator: ".")
         if date![2] == String(year) {
             collectionView.setContentOffset(CGPoint(x: 0, y: 465*(Int(date![1]) ?? 1)-1), animated: true)
         }

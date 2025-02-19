@@ -40,7 +40,7 @@ final class Builder: BuilderProtocol {
         let dataManager = DateManager()
         let coreDataManager = CoreDataManager()
         viewModel.router = router
-        viewModel.dataManager = dataManager
+        viewModel.dateManager = dataManager
         viewModel.coreDataManager = coreDataManager
         view.viewModel = viewModel
         return view

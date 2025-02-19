@@ -13,6 +13,7 @@ protocol DateManagerProtocol {
 
 final class DateManager: DateManagerProtocol {
     private var constants: DateConstants = DateConstants()
+    private var dateFormatter: DateFormatter = DateFormatter()
 
     func getDaysInMonth(year: Int, month: Int) -> Int {
         return year%4==0 && month == 1 ? 29 : constants.daysInMonthes[month]
@@ -39,7 +40,6 @@ final class DateManager: DateManagerProtocol {
     }
     
     func getFirstMonthOfYear(year: Int) -> Int {
-        let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "M.yyyy"
         let arr = dateFormatter.string(from: Date()).split(separator: ".")
         let (month, curYear) = (Int(arr[0])!, Int(arr[1])!)
@@ -51,13 +51,11 @@ final class DateManager: DateManagerProtocol {
     }
     
     func getStringOfDate(_ date: Date) -> String {
-        let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "d.M.yyyy"
         return dateFormatter.string(from: date)
     }
     
     func getTimeOfDate(_ date: Date) -> String {
-        let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "HH:mm"
         return dateFormatter.string(from: date)
     }

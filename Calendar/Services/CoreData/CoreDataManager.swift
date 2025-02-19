@@ -71,7 +71,6 @@ final class CoreDataManager : CoreDataManagerProtocol{
     }
     
     func deleteEvent(event: EventSettings.Event) {
-        var array = [EventSettings.Event]()
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Event")
         do {
             let results = try context.fetch(fetchRequest)

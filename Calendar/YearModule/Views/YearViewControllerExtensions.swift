@@ -51,7 +51,7 @@ extension YearViewController: UICollectionViewDataSource, UICollectionViewDelega
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "YearCell", for: indexPath) as? YearCell else { return UICollectionViewCell() }
         
-        cell.configure(viewModel: viewModel, year: indexPath.row+2024, firstDayOfYear: viewModel.dataManager.getFirstDayOfYear(year: indexPath.row+2024))
+        cell.configure(viewModel: viewModel, year: indexPath.row+2024, firstDayOfYear: viewModel.dateManager.getFirstDayOfYear(year: indexPath.row+2024))
         return cell
     }
 }

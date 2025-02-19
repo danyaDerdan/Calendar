@@ -1,5 +1,5 @@
 protocol YearViewModelProtocol { //cделаем календарь пока что на 10 лет
-    var dataManager: DateManagerProtocol! { get set }
+    var dateManager: DateManagerProtocol! { get set }
     var router: RouterProtocol! { get set }
     var updateViewData: (() -> Void)? { get set }
     var coreDataManager: CoreDataManagerProtocol! { get set }
@@ -7,17 +7,17 @@ protocol YearViewModelProtocol { //cделаем календарь пока ч�
 }
 
 final class YearViewModel : YearViewModelProtocol {
-    public var dataManager: DateManagerProtocol!
+    public var dateManager: DateManagerProtocol!
     public var router: RouterProtocol!
     public var coreDataManager: CoreDataManagerProtocol!
     public var updateViewData: (() -> Void)?
     
     public func getDays(of year: Int) -> [[Day]] {
         var days = [[Day]]()
-        for i in 0..<12 {
+        for month in 0..<12 {
             days.append([])
-            for j in 0..<dataManager.getDaysInMonth(year: year, month: i) {
-                days[i].append(Day(number: j+1, month: i+1, year: year, isEvented: isDayEvented(day: j+1, month: i+1, year: year)))
+            for day in 0..<dateManager.getDaysInMonth(year: year, month: month) {
+                days[month].append(Day(number: day+1, month: month+1, year: year, isEvented: isDayEvented(day: day+1, month: month+1, year: year)))
             }
         }
         return days
@@ -26,10 +26,11 @@ final class YearViewModel : YearViewModelProtocol {
     private func isDayEvented(day: Int, month: Int, year: Int) -> Bool {
         let events = coreDataManager.getEvents()
         for event in events {
-            if dataManager.getStringOfDate(event.start) == "\(day).\(month).\(year)" { return true }
-            
+            if dateManager.getStringOfDate(event.start) == "\(day).\(month).\(year)" { return true }
         }
         return false
     }
+    
+    
 
 }
