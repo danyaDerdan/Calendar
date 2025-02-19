@@ -37,7 +37,7 @@ final class Builder: BuilderProtocol {
     func createYearModule(router: RouterProtocol) -> UIViewController {
         let view = YearViewController()
         let viewModel = yearViewModel
-        let dataManager = DataManager()
+        let dataManager = DateManager()
         let coreDataManager = CoreDataManager()
         viewModel.router = router
         viewModel.dataManager = dataManager
@@ -61,7 +61,7 @@ final class Builder: BuilderProtocol {
     func createDayModel(router: RouterProtocol, day: Day) -> UIViewController {
         let viewModel = dayViewModel
         let coreDataManager = CoreDataManager()
-        let dateManager = DataManager()
+        let dateManager = DateManager()
         viewModel.day = day
         viewModel.router = router
         viewModel.coreDataManager = coreDataManager

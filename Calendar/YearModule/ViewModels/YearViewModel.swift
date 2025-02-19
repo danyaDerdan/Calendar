@@ -1,5 +1,5 @@
 protocol YearViewModelProtocol { //cделаем календарь пока что на 10 лет
-    var dataManager: DataManagerProtocol! { get set }
+    var dataManager: DateManagerProtocol! { get set }
     var router: RouterProtocol! { get set }
     var updateViewData: (() -> Void)? { get set }
     var coreDataManager: CoreDataManagerProtocol! { get set }
@@ -7,7 +7,7 @@ protocol YearViewModelProtocol { //cделаем календарь пока ч�
 }
 
 final class YearViewModel : YearViewModelProtocol {
-    public var dataManager: DataManagerProtocol!
+    public var dataManager: DateManagerProtocol!
     public var router: RouterProtocol!
     public var coreDataManager: CoreDataManagerProtocol!
     public var updateViewData: (() -> Void)?

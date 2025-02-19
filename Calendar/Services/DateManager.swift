@@ -1,6 +1,6 @@
 import Foundation
 
-protocol DataManagerProtocol {
+protocol DateManagerProtocol {
     func getDaysInMonth(year: Int, month: Int) -> Int
     func getMonthName(month: Int) -> String
     func getCellsStartIndex(year: Int) -> [Int]
@@ -11,8 +11,8 @@ protocol DataManagerProtocol {
     func getTimeOfDate(_ date: Date) -> String
 }
 
-final class DataManager: DataManagerProtocol {
-    private var constants: DataConstants = DataConstants()
+final class DateManager: DateManagerProtocol {
+    private var constants: DateConstants = DateConstants()
 
     func getDaysInMonth(year: Int, month: Int) -> Int {
         return year%4==0 && month == 1 ? 29 : constants.daysInMonthes[month]
