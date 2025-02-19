@@ -1,9 +1,9 @@
 protocol EventViewModelProtocol {
     var updateViewData : ((EventSettings) -> ())? { get set }
     var event: EventSettings.Event? { get }
-    var yearViewModel: YearViewModelProtocol! { get set }
-    var dayViewModel: DayViewModelProtocol! { get set }
-    var coreDataManager: CoreDataManagerProtocol! { get set }
+    var yearViewModel: YearViewModelProtocol? { get set }
+    var dayViewModel: DayViewModelProtocol? { get set }
+    var coreDataManager: CoreDataManagerProtocol? { get set }
     func validateData(name: String)
     func printSavedEvents()
     func reloadViews()
@@ -13,9 +13,9 @@ final class EventViewModel: EventViewModelProtocol {
 
     var updateViewData: ((EventSettings) -> ())?
     var event: EventSettings.Event?
-    var coreDataManager: CoreDataManagerProtocol!
-    var yearViewModel: YearViewModelProtocol!
-    var dayViewModel: DayViewModelProtocol!
+    var coreDataManager: CoreDataManagerProtocol?
+    var yearViewModel: YearViewModelProtocol?
+    var dayViewModel: DayViewModelProtocol?
     
     init() {
         updateViewData?(.invalid)
@@ -35,8 +35,8 @@ final class EventViewModel: EventViewModelProtocol {
     }
     
     func reloadViews() {
-        yearViewModel.updateViewData?()
-        dayViewModel.updateViewData?()
+        yearViewModel?.updateViewData?()
+        dayViewModel?.updateViewData?()
     }
     
     

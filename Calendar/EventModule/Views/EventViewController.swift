@@ -2,7 +2,7 @@ import UIKit
 
 final class EventViewController: UIViewController {
     
-    var viewModel: EventViewModelProtocol!
+    var viewModel: EventViewModelProtocol?
     var viewData: EventSettings = .invalid {
         didSet {
             updateView()
@@ -27,7 +27,7 @@ final class EventViewController: UIViewController {
         nameTextField.delegate = self
         descriptionTextField.delegate = self
         startDatePicker.addTarget(self, action: #selector(startDatePickerValueChanged), for: .valueChanged)
-        if let event = viewModel.event {
+        if let event = viewModel?.event {
             nameTextField.text = event.name
             startDatePicker.date = event.start
             endDatePicker.date = event.end
@@ -36,7 +36,7 @@ final class EventViewController: UIViewController {
     }
     
     func updateView() {
-        viewModel.updateViewData = { [weak self] viewData in
+        viewModel?.updateViewData = { [weak self] viewData in
             self?.viewData = viewData
             switch viewData {
             case .invalid:
@@ -201,7 +201,7 @@ extension EventViewController: UITextFieldDelegate{
         datePicker.minimumDate = Calendar.current.date(byAdding: .minute, value: 5, to: startDatePicker.date)
         datePicker.maximumDate = Calendar.current.date(byAdding: .year, value: 9, to: Date())
         datePicker.timeZone = Calendar.current.timeZone
-        datePicker.setDate(Calendar.current.date(byAdding: .hour, value: 1, to: startDatePicker.date)!, animated: true)
+        datePicker.setDate(Calendar.current.date(byAdding: .hour, value: 1, to: startDatePicker.date) ?? Date(), animated: true)
         view.addSubview(datePicker)
         
         return datePicker
@@ -267,8 +267,8 @@ extension EventViewController: UITextFieldDelegate{
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
-            self.viewModel.validateData(name: textField.text ?? "" + string)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) { [weak self] in
+            self?.viewModel?.validateData(name: textField.text ?? "" + string)
         }
         return true
     }
@@ -282,16 +282,16 @@ extension EventViewController: UITextFieldDelegate{
     }
     
     @objc func save() {
-        if let event = viewModel.event {
-            viewModel.coreDataManager.deleteEvent(event: event)
+        if let event = viewModel?.event {
+            viewModel?.coreDataManager?.deleteEvent(event: event)
         }
         let newEvent = EventSettings.Event(name: nameTextField.text ?? "",
                                            description: descriptionTextField.text ?? "",
                                            start: startDatePicker.date,
                                            end: endDatePicker.date,
                                            notification: notificationSwitch.isOn)
-        viewModel.coreDataManager.saveEvent(newEvent)
-        viewModel.reloadViews()
+        viewModel?.coreDataManager?.saveEvent(newEvent)
+        viewModel?.reloadViews()
         let notificationManager = NotificationManager()
         notificationManager.addNotification(event: newEvent)
         exit()

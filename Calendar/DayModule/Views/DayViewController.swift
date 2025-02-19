@@ -2,21 +2,18 @@ import UIKit
 
 final class DayViewController: UIViewController {
     
-    var viewModel: DayViewModel!
-    var scrollView: UIScrollView!
+    var viewModel: DayViewModel?
+    var scrollView: UIScrollView = UIScrollView()
     
     override func viewDidLoad() {
         view.backgroundColor = .white
         navigationController?.navigationBar.isHidden = false
-        title = viewModel.day.date
+        title = viewModel?.day?.date
         setUpUI()
         updateView()
     }
     
     func setUpUI() {
-        
-        
-        scrollView = UIScrollView()
         scrollView.alwaysBounceVertical = true
         view.addSubview(scrollView)
         
@@ -30,7 +27,7 @@ final class DayViewController: UIViewController {
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             ])
         setUpLines()
-        
+        guard let viewModel else { return }
         for (index, event) in viewModel.getEvents().enumerated() {
             addEvent(event, index)
         }
@@ -93,11 +90,11 @@ final class DayViewController: UIViewController {
     }
     
     @objc func buttonTapped(sender: UIButton) {
-        viewModel.router.showEventModule(event: viewModel.getEvents()[sender.tag])
+        viewModel?.router?.showEventModule(event: viewModel?.getEvents()[sender.tag])
     }
     
     func updateView() {
-        viewModel.updateViewData = { [weak self] in
+        viewModel?.updateViewData = { [weak self] in
             self?.scrollView.removeFromSuperview()
             self?.setUpUI()
         }

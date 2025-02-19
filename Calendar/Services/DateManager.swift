@@ -42,7 +42,7 @@ final class DateManager: DateManagerProtocol {
     func getFirstMonthOfYear(year: Int) -> Int {
         dateFormatter.dateFormat = "M.yyyy"
         let arr = dateFormatter.string(from: Date()).split(separator: ".")
-        let (month, curYear) = (Int(arr[0])!, Int(arr[1])!)
+        let (month, curYear) = (Int(arr[0]) ?? 0, Int(arr[1]) ?? 0)
         if year > curYear { return 0 }
         if year == curYear {
             return month - 1

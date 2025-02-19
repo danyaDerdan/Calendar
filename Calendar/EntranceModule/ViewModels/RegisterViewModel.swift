@@ -1,14 +1,12 @@
 protocol EntranceViewModelProtocol {
     var updateViewData: ((UserData) -> ())? { get set}
-    var router: RouterProtocol! {get set}
+    var router: RouterProtocol? {get set}
     func validateData(data: UserData.Data)
-    
-//    var networkService
 }
 
 final class RegisterViewModel: EntranceViewModelProtocol {
     public var updateViewData: ((UserData) -> ())?
-    public var router: RouterProtocol!
+    public var router: RouterProtocol?
     
     init() {
         updateViewData?(.initial)

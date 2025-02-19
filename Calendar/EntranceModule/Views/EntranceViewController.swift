@@ -2,8 +2,8 @@ import UIKit
 
 final class EntranceViewController: UIViewController {
     
-    public var viewModel: EntranceViewModelProtocol!
-    private var textFieldsView: EntranceView!
+    public var viewModel: EntranceViewModelProtocol?
+    private var textFieldsView: EntranceView = EntranceView()
     public var buttonTitle: String = "Enter"
     lazy var button = createButton(title: buttonTitle)
     
@@ -17,11 +17,11 @@ final class EntranceViewController: UIViewController {
     }
     
     func updateView() {
-        viewModel.updateViewData = { [weak self] (viewData) in
+        viewModel?.updateViewData = { [weak self] (viewData) in
             self?.textFieldsView.viewData = viewData
             switch viewData {
             case .valid:
-                self?.viewModel.router?.showYearModule()
+                self?.viewModel?.router?.showYearModule()
             default:
                 break
             }
@@ -66,7 +66,7 @@ extension EntranceViewController : UITextFieldDelegate {
     
     @objc func buttonTapped() {
         let (login, password) = (textFieldsView.loginTextField.text ?? "", textFieldsView.passwordTextField.text ?? "")
-        viewModel.validateData(data: UserData.Data(login: login, password: password))
+        viewModel?.validateData(data: UserData.Data(login: login, password: password))
     }
     
     @objc func hideKeyboard() {

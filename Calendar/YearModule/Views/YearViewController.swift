@@ -1,7 +1,7 @@
 import UIKit
 
 final class YearViewController: UIViewController {
-    var viewModel: YearViewModelProtocol!
+    var viewModel: YearViewModelProtocol?
     
     lazy var collectionView = createCollectionView()
     lazy var plusButton = createPlusButton()
@@ -18,13 +18,13 @@ final class YearViewController: UIViewController {
     }
     
     func updateView() {
-        viewModel.updateViewData = { [weak self] in
+        viewModel?.updateViewData = { [weak self] in
             self?.collectionView.reloadData()
         }
     }
 
     @objc func plusButtonTapped() {
-        viewModel.router.showEventModule(event: nil)
+        viewModel?.router?.showEventModule(event: nil)
     }
     
 }

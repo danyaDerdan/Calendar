@@ -2,7 +2,7 @@ import UIKit
 
 class LaunchViewController: UIViewController {
 
-    public var viewModel: LaunchViewModelProtocol!
+    public var viewModel: LaunchViewModelProtocol?
     
     lazy var titleLabel = createLabel()
     lazy var loginButton = createButton(text: "Login", backgroundColor: .systemPurple, textColor: .white)
@@ -65,10 +65,10 @@ private extension LaunchViewController {
     }
     
     @objc func loginButtonTapped() {
-        viewModel.router.showLoginModule()
+        viewModel?.router?.showLoginModule()
     }
     
     @objc func registerButtonTapped() {
-        viewModel.router.showRegisterModule()
+        viewModel?.router?.showRegisterModule()
     }
 }
