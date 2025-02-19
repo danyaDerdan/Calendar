@@ -2,7 +2,7 @@ import UIKit
 
 class LaunchViewController: UIViewController {
 
-    public var viewModel: LaunchViewModelProtocol?
+    var viewModel: LaunchViewModelProtocol?
     
     lazy var titleLabel = createLabel()
     lazy var loginButton = createButton(text: "Login", backgroundColor: .systemPurple, textColor: .white)

@@ -4,7 +4,7 @@ protocol DayViewModelProtocol {
     var coreDataManager: CoreDataManagerProtocol? { get set }
     var dateManager: DateManagerProtocol? { get set }
     var updateViewData: (() -> Void)? { get set }
-    
+    func getStringHour(_ hour: Int) -> String
 }
 
 final class DayViewModel: DayViewModelProtocol {
@@ -12,7 +12,7 @@ final class DayViewModel: DayViewModelProtocol {
     var router: RouterProtocol?
     var coreDataManager: CoreDataManagerProtocol?
     var dateManager: DateManagerProtocol?
-    public var updateViewData: (() -> Void)?
+    var updateViewData: (() -> Void)?
     
     func getEvents() -> [EventSettings.Event] {
         var events = [EventSettings.Event]()
@@ -23,6 +23,10 @@ final class DayViewModel: DayViewModelProtocol {
         }
         events.sort() {$0.start < $1.end}
         return events
+    }
+    
+    func getStringHour(_ hour: Int) -> String {
+        return "\(hour > 9 ? String(hour) : "0" + String(hour)).00"
     }
     
 }

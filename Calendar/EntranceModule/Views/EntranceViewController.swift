@@ -2,9 +2,9 @@ import UIKit
 
 final class EntranceViewController: UIViewController {
     
-    public var viewModel: EntranceViewModelProtocol?
+    var viewModel: EntranceViewModelProtocol?
     private var textFieldsView: EntranceView = EntranceView()
-    public var buttonTitle: String = "Enter"
+    var buttonTitle: String = "Enter"
     lazy var button = createButton(title: buttonTitle)
     
     override func viewDidLoad() {

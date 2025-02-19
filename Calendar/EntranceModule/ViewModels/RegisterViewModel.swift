@@ -5,8 +5,8 @@ protocol EntranceViewModelProtocol {
 }
 
 final class RegisterViewModel: EntranceViewModelProtocol {
-    public var updateViewData: ((UserData) -> ())?
-    public var router: RouterProtocol?
+    var updateViewData: ((UserData) -> ())?
+    var router: RouterProtocol?
     
     init() {
         updateViewData?(.initial)
