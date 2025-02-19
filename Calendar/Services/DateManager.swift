@@ -5,7 +5,7 @@ protocol DateManagerProtocol {
     func getMonthName(month: Int) -> String
     func getCellsStartIndex(year: Int) -> [Int]
     func getDayOfWeek(day: Int) -> String
-    func getFirstDayOfYear(year: Int) -> Int
+    func getFirstDayOfYear(_ year: Int) -> Int
     func getFirstMonthOfYear(year: Int) -> Int
     func getStringOfDate(_ date: Date) -> String
     func getTimeOfDate(_ date: Date) -> String
@@ -24,7 +24,7 @@ final class DateManager: DateManagerProtocol {
     }
     
     func getCellsStartIndex(year: Int) -> [Int] {
-        var cellsStartIndex = [constants.yearsStartsWith[year-2024]]
+        var cellsStartIndex = [getFirstDayOfYear(year)]
         for i in 1..<12 {
             cellsStartIndex.append((cellsStartIndex[i-1] + getDaysInMonth(year: year, month: i-1))%7)
         }
@@ -35,8 +35,8 @@ final class DateManager: DateManagerProtocol {
         return constants.daysOfWeek[day]
     }
     
-    func getFirstDayOfYear(year: Int) -> Int {
-        return constants.yearsStartsWith[year-2024]
+    func getFirstDayOfYear(_ year: Int) -> Int {
+        return Calendar.current.component(.weekday, from: DateComponents(calendar: .current, year: year, month: 1, day: 0).date ?? Date())-1
     }
     
     func getFirstMonthOfYear(year: Int) -> Int {
