@@ -1,5 +1,13 @@
 import UIKit
 
+private struct Constants {
+    static let buttonTitleFont = UIFont.boldSystemFont(ofSize: 30)
+    static let buttonCornerRadius: CGFloat = 30
+    static let verticalInset: CGFloat = 60
+    static let buttonWidthMultiplier: CGFloat = 0.8
+    static let buttonHeight: CGFloat = 80
+}
+
 final class EntranceViewController: UIViewController {
     
     var viewModel: EntranceViewModelProtocol?
@@ -44,15 +52,15 @@ extension EntranceViewController : UITextFieldDelegate {
         button.setTitle(title, for: .normal)
         button.backgroundColor = .systemPurple
         button.titleLabel?.tintColor = .white
-        button.titleLabel?.font = .boldSystemFont(ofSize: 30)
-        button.layer.cornerRadius = 30
+        button.titleLabel?.font = Constants.buttonTitleFont
+        button.layer.cornerRadius = Constants.buttonCornerRadius
         view.addSubview(button)
         button.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-        button.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -60),
-        button.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-        button.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8),
-        button.heightAnchor.constraint(equalToConstant: 80)
+            button.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -Constants.verticalInset),
+            button.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            button.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: Constants.buttonWidthMultiplier),
+            button.heightAnchor.constraint(equalToConstant: Constants.buttonHeight)
         ])
         textFieldsView.loginTextField.delegate = self
         return button

@@ -2,6 +2,13 @@ import UIKit
 
 final class YearCell: UICollectionViewCell {
     
+    private struct Constants {
+        static let collectionTopInset: CGFloat = 80
+        static let verticalInset: CGFloat = 10
+        static let leadingInset: CGFloat = 20
+        static let offsetMultiplier = 465
+    }
+    
     var viewModel: YearViewModelProtocol?
     
     var firstDayOfYear: Int?
@@ -36,21 +43,21 @@ final class YearCell: UICollectionViewCell {
         
        
         NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: topAnchor, constant: 80),
+            collectionView.topAnchor.constraint(equalTo: topAnchor, constant: Constants.collectionTopInset),
             collectionView.bottomAnchor.constraint(equalTo: bottomAnchor),
             collectionView.leadingAnchor.constraint(equalTo: leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: trailingAnchor),
             
-            weekStackView.bottomAnchor.constraint(equalTo: collectionView.topAnchor, constant: -10),
+            weekStackView.bottomAnchor.constraint(equalTo: collectionView.topAnchor, constant: -Constants.verticalInset),
             weekStackView.widthAnchor.constraint(equalTo: collectionView.widthAnchor),
             
-            yearLabel.bottomAnchor.constraint(equalTo: weekStackView.topAnchor, constant: -10),
-            yearLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20)
+            yearLabel.bottomAnchor.constraint(equalTo: weekStackView.topAnchor, constant: -Constants.verticalInset),
+            yearLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Constants.leadingInset)
         ])
         
         guard let date = viewModel.dateManager?.getStringOfDate(Date()).split(separator: ".") else { return }
         if date[2] == String(year) {
-            collectionView.setContentOffset(CGPoint(x: 0, y: 465*(Int(date[1]) ?? 1)-1), animated: true)
+            collectionView.setContentOffset(CGPoint(x: 0, y: Constants.offsetMultiplier*(Int(date[1]) ?? 1)-1), animated: true)
         }
         
         

@@ -9,6 +9,7 @@ protocol DateManagerProtocol {
     func getFirstMonthOfYear(year: Int) -> Int
     func getStringOfDate(_ date: Date) -> String
     func getTimeOfDate(_ date: Date) -> String
+    func isDayInWeekend(_ day: Day) -> Bool
 }
 
 final class DateManager: DateManagerProtocol {
@@ -58,6 +59,13 @@ final class DateManager: DateManagerProtocol {
     func getTimeOfDate(_ date: Date) -> String {
         dateFormatter.dateFormat = "HH:mm"
         return dateFormatter.string(from: date)
+    }
+    
+    func isDayInWeekend(_ day: Day) -> Bool {
+        dateFormatter.dateFormat = "d.M.yyyy"
+        guard let date = dateFormatter.date(from: "\(day.number).\(day.month).\(day.year)") else { return false }
+        if Calendar.current.isDateInWeekend(date) { return true }
+        return false
     }
 }
 
