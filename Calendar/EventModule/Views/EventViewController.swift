@@ -9,7 +9,7 @@ private struct Constants {
     static let cornerRadius: CGFloat = 16
     static let stackLeadigInset: CGFloat = 20
     static let stackVerticalInset: CGFloat = 10
-    static let textFieldVerticalInset: CGFloat = 10
+    static let textFieldVerticalInset: CGFloat = 100
     static let textFieldWidthMultiplier: CGFloat = 0.9
     static let textFieldHeight: CGFloat = 100
     static let dateViewVerticalInset: CGFloat = 50
@@ -20,7 +20,7 @@ private struct Constants {
     static let navigationStackWidthMultiplier: CGFloat = 0.8
     static let notificationTitle = "Notification"
     static let notificationCornerRadius: CGFloat = 16
-    static let notificationViewInset: CGFloat = 50
+    static let notificationViewInset: CGFloat = 20
     static let notificationViewHeight: CGFloat = 50
     static let notificationViewWidthMultiplier: CGFloat = 0.9
     static let datePickerMinuteInterval = 5
@@ -139,7 +139,7 @@ extension EventViewController: UITextFieldDelegate{
         NSLayoutConstraint.activate([
             dateView.topAnchor.constraint(equalTo: textFieldsView.bottomAnchor, constant: Constants.dateViewVerticalInset),
             dateView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            dateView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: Constants.textFieldHeight),
+            dateView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: Constants.textFieldWidthMultiplier),
             dateView.heightAnchor.constraint(equalToConstant: Constants.textFieldHeight)
             ])
         
@@ -170,7 +170,7 @@ extension EventViewController: UITextFieldDelegate{
         
         let stackView = UIStackView(arrangedSubviews: [exitButton, label, saveButton])
         stackView.axis = .horizontal
-        stackView.distribution = .fill
+        stackView.distribution = .equalSpacing
         
         view.addSubview(stackView)
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -197,7 +197,8 @@ extension EventViewController: UITextFieldDelegate{
         NSLayoutConstraint.activate([
             notificationsStackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             notificationsStackView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            notificationsStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.notificationViewInset)
+            notificationsStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.notificationViewInset),
+            notificationsStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.notificationViewInset)
             ])
         
         view.translatesAutoresizingMaskIntoConstraints = false

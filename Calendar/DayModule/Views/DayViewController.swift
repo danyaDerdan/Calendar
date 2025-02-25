@@ -14,7 +14,7 @@ private struct Constants {
 
 final class DayViewController: UIViewController {
     
-    var viewModel: DayViewModel?
+    var viewModel: DayViewModelProtocol?
     var scrollView: UIScrollView = UIScrollView()
     
     override func viewDidLoad() {
@@ -47,10 +47,10 @@ final class DayViewController: UIViewController {
     
     func setUpLines() {
         
-        for i in 0..<Constants.hoursCount {
+        for i in 0..<(viewModel?.hours?.count ?? 0) {
             let line = UIView()
             let label = UILabel()
-            label.text = viewModel?.getStringHour(i)
+            label.text = viewModel?.hours?[i].text
             label.textColor = .systemGray2
             line.backgroundColor = .systemGray4
             

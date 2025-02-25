@@ -14,8 +14,8 @@ final class Builder: BuilderProtocol {
     var dayViewModel = DayViewModel()
     
     func createLaunchModule(router: RouterProtocol) -> UIViewController {
-        let view = LaunchViewController()
         let viewModel = LaunchViewModel()
+        let view = LaunchViewController()
         viewModel.router = router
         view.viewModel = viewModel
         return view
@@ -26,8 +26,8 @@ final class Builder: BuilderProtocol {
     }
     
     func createRegisterModule(router: RouterProtocol) -> UIViewController {
-        let view = EntranceViewController()
         let viewModel = RegisterViewModel()
+        let view = EntranceViewController()
         viewModel.router = router
         view.buttonTitle = "Register"
         view.viewModel = viewModel
@@ -35,8 +35,8 @@ final class Builder: BuilderProtocol {
     }
     
     func createYearModule(router: RouterProtocol) -> UIViewController {
-        let view = YearViewController()
         let viewModel = yearViewModel
+        let view = YearViewController()
         let dataManager = DateManager()
         let coreDataManager = CoreDataManager()
         viewModel.router = router
