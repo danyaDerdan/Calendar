@@ -11,9 +11,9 @@ private struct Constants {
 final class EntranceViewController: UIViewController {
     
     var viewModel: EntranceViewModelProtocol?
-    private var textFieldsView: EntranceView = EntranceView()
     var buttonTitle: String = "Enter"
     lazy var button = createButton(title: buttonTitle)
+    private lazy var textFieldsView = EntranceView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,6 +38,14 @@ final class EntranceViewController: UIViewController {
 }
 
 extension EntranceViewController : UITextFieldDelegate {
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        hideKeyboard()
+        return true
+    }
+}
+
+private extension EntranceViewController {
     
     func setUpView() {
         textFieldsView = EntranceView()
@@ -79,11 +87,6 @@ extension EntranceViewController : UITextFieldDelegate {
     
     @objc func hideKeyboard() {
         view.endEditing(true)
-    }
-    
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        hideKeyboard()
-        return true
     }
 }
 

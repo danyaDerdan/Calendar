@@ -1,20 +1,21 @@
 protocol DayViewModelProtocol {
     var day: Day? { get set}
-    var router: RouterProtocol? { get set }
-    var coreDataManager: CoreDataManagerProtocol? { get set }
-    var dateManager: DateManagerProtocol? { get set }
-    var updateViewData: (() -> Void)? { get set }
+    var updateViewData: ((DayViewState) -> Void)? { get set }
     var hours: [Hour]? { get }
+    var events: [EventSettings.Event]? { get }
     func getEvents() -> [EventSettings.Event]
+    func buttonTapped(tag: Int)
+    func viewDidLoad()
 }
 
 final class DayViewModel: DayViewModelProtocol {
-    var day: Day?
     var router: RouterProtocol?
     var coreDataManager: CoreDataManagerProtocol?
     var dateManager: DateManagerProtocol?
-    var updateViewData: (() -> Void)?
+    var day: Day?
+    var updateViewData: ((DayViewState) -> Void)?
     var hours: [Hour]?
+    var events: [EventSettings.Event]?
     
     init() {
         hours = getHours()
@@ -42,5 +43,25 @@ final class DayViewModel: DayViewModelProtocol {
         }
         return hours
     }
+    
+    func buttonTapped(tag: Int) {
+        router?.showEventModule(event: getEvents()[tag], onDismiss: { [weak self] in
+            self?.sendViewData()
+        })
+    }
+    
+    func viewDidLoad() {
+        sendViewData()
+    }
+    
+    func sendViewData() {
+        if getEvents().count > 0 {
+            updateViewData?(.data(data: DayViewState.ViewData(events: getEvents())))
+        }
+        else {
+            updateViewData?(.error)
+        }
+    }
+    
     
 }

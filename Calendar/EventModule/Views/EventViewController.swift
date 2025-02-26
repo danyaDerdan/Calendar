@@ -54,15 +54,15 @@ final class EventViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemGray6
-        setUpUI()
+        setupUI()
         updateView()
         nameTextField.delegate = self
         descriptionTextField.delegate = self
         startDatePicker.addTarget(self, action: #selector(startDatePickerValueChanged), for: .valueChanged)
         if let event = viewModel?.event {
             nameTextField.text = event.name
-            startDatePicker.date = event.start
-            endDatePicker.date = event.end
+            startDatePicker.setDate(event.start, animated: true)
+            endDatePicker.setDate(event.end, animated: true)
             notificationSwitch.isOn = event.notification
         }
     }
@@ -124,7 +124,7 @@ extension EventViewController: UITextFieldDelegate{
         return view
     }
     
-    func setUpUI() {
+    func setupUI() {
         view.addSubview(textFieldsView)
         textFieldsView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -215,7 +215,7 @@ extension EventViewController: UITextFieldDelegate{
         let datePicker = UIDatePicker()
         datePicker.datePickerMode = .dateAndTime
         datePicker.minuteInterval = Constants.datePickerMinuteInterval
-        datePicker.minimumDate = Calendar.current.date(byAdding: .minute, value: -Constants.datePickerMinuteInterval, to: Date())
+        datePicker.minimumDate = viewModel?.event?.start ?? Date()
         datePicker.maximumDate = Calendar.current.date(byAdding: .year, value: Constants.countOfYears, to: Date())
         datePicker.timeZone = Calendar.current.timeZone
         view.addSubview(datePicker)
@@ -228,7 +228,7 @@ extension EventViewController: UITextFieldDelegate{
         let datePicker = UIDatePicker()
         datePicker.datePickerMode = .dateAndTime
         datePicker.minuteInterval = Constants.datePickerMinuteInterval
-        datePicker.minimumDate = Calendar.current.date(byAdding: .minute, value: Constants.datePickerMinuteInterval, to: startDatePicker.date)
+        datePicker.minimumDate = viewModel?.event?.end ?? Date()
         datePicker.maximumDate = Calendar.current.date(byAdding: .year, value: Constants.countOfYears, to: Date())
         datePicker.timeZone = Calendar.current.timeZone
         datePicker.setDate(Calendar.current.date(byAdding: .hour, value: 1, to: startDatePicker.date) ?? Date(), animated: true)
@@ -312,18 +312,13 @@ extension EventViewController: UITextFieldDelegate{
     }
     
     @objc func save() {
-        if let event = viewModel?.event {
-            viewModel?.coreDataManager?.deleteEvent(event: event)
-        }
-        let newEvent = EventSettings.Event(name: nameTextField.text ?? "",
-                                           description: descriptionTextField.text ?? "",
-                                           start: startDatePicker.date,
-                                           end: endDatePicker.date,
-                                           notification: notificationSwitch.isOn)
-        viewModel?.coreDataManager?.saveEvent(newEvent)
-        viewModel?.reloadViews()
-        let notificationManager = NotificationManager()
-        notificationManager.addNotification(event: newEvent)
+        viewModel?.saveEvent(
+            name: nameTextField.text,
+            description: descriptionTextField.text,
+            start: startDatePicker.date,
+            end: endDatePicker.date,
+            notification: notificationSwitch.isOn
+        )
         exit()
     }
 }

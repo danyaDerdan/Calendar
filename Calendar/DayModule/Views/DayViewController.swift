@@ -16,13 +16,17 @@ final class DayViewController: UIViewController {
     
     var viewModel: DayViewModelProtocol?
     var scrollView: UIScrollView = UIScrollView()
+    var eventBlocks: [UIButton] = []
     
     override func viewDidLoad() {
+        super.viewDidLoad()
         view.backgroundColor = .white
         navigationController?.navigationBar.isHidden = false
         title = viewModel?.day?.date
         setUpUI()
         updateView()
+        viewModel?.viewDidLoad()
+        
     }
     
     func setUpUI() {
@@ -39,8 +43,10 @@ final class DayViewController: UIViewController {
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             ])
         setUpLines()
-        guard let viewModel else { return }
-        for (index, event) in viewModel.getEvents().enumerated() {
+    }
+    
+    func setupEvents(events: [EventSettings.Event]) {
+        for (index, event) in events.enumerated() {
             addEvent(event, index)
         }
     }
@@ -101,17 +107,31 @@ final class DayViewController: UIViewController {
             block.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: event.start.timeIntervalSince(start)/Constants.hourHeight + Constants.hourHeight)
         ])
         block.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
+        eventBlocks.append(block)
         scrollView.scrollRectToVisible(CGRect(x: Constants.blockLeadingInset, y: event.start.timeIntervalSince(start)/Constants.hourHeight - Constants.hourHeight, width: Constants.blockLeadingInset, height: Constants.blockLeadingInset), animated: true)
     }
     
-    @objc func buttonTapped(sender: UIButton) {
-        viewModel?.router?.showEventModule(event: viewModel?.getEvents()[sender.tag])
+    private func clearEvents() {
+        for block in eventBlocks {
+            block.removeFromSuperview()
+            eventBlocks.removeAll() {$0 == block}
+        }
     }
     
-    func updateView() {
-        viewModel?.updateViewData = { [weak self] in
-            self?.scrollView.removeFromSuperview()
-            self?.setUpUI()
+    @objc private func buttonTapped(sender: UIButton) {
+        viewModel?.buttonTapped(tag: sender.tag)
+    }
+    
+    private func updateView() {
+        viewModel?.updateViewData = { [weak self] viewState in
+            switch viewState {
+            case .data(let viewData):
+                self?.clearEvents()
+                self?.setupEvents(events: viewData.events)
+            case .error:
+                self?.clearEvents()
+            }
+            
         }
     }
 }

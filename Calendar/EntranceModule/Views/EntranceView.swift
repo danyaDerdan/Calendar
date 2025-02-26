@@ -35,6 +35,7 @@ final class EntranceView: UIView {
     lazy var stackView = createStackView()
     
     override func layoutSubviews() {
+        super.layoutSubviews()
         switch viewData {
         case .initial, .loading:
             loginTextField.layer.borderColor = Constants.defaultColor
