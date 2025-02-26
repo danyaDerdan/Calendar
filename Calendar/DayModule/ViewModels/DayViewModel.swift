@@ -3,12 +3,14 @@ protocol DayViewModelProtocol {
     var updateViewData: ((DayViewState) -> Void)? { get set }
     var hours: [Hour]? { get }
     var events: [EventSettings.Event]? { get }
+    var yearViewModel: YearViewModelProtocol? { get set }
     func getEvents() -> [EventSettings.Event]
     func buttonTapped(tag: Int)
     func viewDidLoad()
 }
 
 final class DayViewModel: DayViewModelProtocol {
+    var yearViewModel: YearViewModelProtocol?
     var router: RouterProtocol?
     var coreDataManager: CoreDataManagerProtocol?
     var dateManager: DateManagerProtocol?
@@ -45,7 +47,7 @@ final class DayViewModel: DayViewModelProtocol {
     }
     
     func buttonTapped(tag: Int) {
-        router?.showEventModule(event: getEvents()[tag])
+        router?.showEventModule(event: getEvents()[tag], dayViewModel: self, yearViewModel: yearViewModel)
     }
     
     func viewDidLoad() {

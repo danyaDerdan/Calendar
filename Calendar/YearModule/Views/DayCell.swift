@@ -34,8 +34,8 @@ class DayCell: UICollectionViewCell {
         
     }
     
-    @objc private func buttonTapped(sender: UIButton) {
-        viewModel?.router?.showDayModule(with: day ?? Day())
+    @objc private func buttonTapped() {
+        viewModel?.dayCellTapped(day: day)
         
     }
     

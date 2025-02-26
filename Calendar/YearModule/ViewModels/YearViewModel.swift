@@ -1,16 +1,16 @@
 protocol YearViewModelProtocol {
-    var dateManager: DateManagerProtocol? { get set }
-    var router: RouterProtocol? { get set }
+    var dateManager: DateManagerProtocol? { get }
     var updateViewData: (() -> Void)? { get set }
-    var coreDataManager: CoreDataManagerProtocol? { get set }
     func getDays(of year: Int) -> [[Day]]
+    func plusButtonTapped()
+    func dayCellTapped(day: Day?)
 }
 
 final class YearViewModel : YearViewModelProtocol {
-    public var dateManager: DateManagerProtocol?
-    public var router: RouterProtocol?
-    public var coreDataManager: CoreDataManagerProtocol?
-    public var updateViewData: (() -> Void)?
+    var dateManager: DateManagerProtocol?
+    var router: RouterProtocol?
+    var coreDataManager: CoreDataManagerProtocol?
+    var updateViewData: (() -> Void)?
     
     public func getDays(of year: Int) -> [[Day]] {
         var days = [[Day]]()
@@ -29,6 +29,14 @@ final class YearViewModel : YearViewModelProtocol {
             if dateManager?.getStringOfDate(event.start) == "\(day).\(month).\(year)" { return true }
         }
         return false
+    }
+    
+    func plusButtonTapped() {
+        router?.showEventModule(event: nil, dayViewModel: nil, yearViewModel: self)
+    }
+    
+    func dayCellTapped(day: Day?) {
+        router?.showDayModule(with: day ?? Day(), yearViewModel: self)
     }
     
     
