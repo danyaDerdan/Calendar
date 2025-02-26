@@ -9,7 +9,7 @@ protocol RouterProtocol {
     func showLoginModule()
     func showRegisterModule()
     func showYearModule()
-    func showEventModule(event: EventSettings.Event?, onDismiss: (() -> Void)?)
+    func showEventModule(event: EventSettings.Event?)
     func showDayModule(with day: Day)
 }
 
@@ -43,8 +43,8 @@ final class Router: RouterProtocol {
         navigationController.pushViewController(builder.createYearModule(router: self), animated: true)
     }
     
-    func showEventModule(event: EventSettings.Event?, onDismiss: (() -> Void)? = nil) {
-        navigationController.present(builder.createEventModule(router: self, event: event, onDismiss: onDismiss), animated: true)
+    func showEventModule(event: EventSettings.Event?) {
+        navigationController.present(builder.createEventModule(router: self, event: event), animated: true)
     }
     func showDayModule(with day: Day) {
         navigationController.pushViewController(builder.createDayModel(router: self, day: day), animated: true)

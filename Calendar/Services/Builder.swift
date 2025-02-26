@@ -5,7 +5,7 @@ protocol BuilderProtocol {
     func createLoginModule(router: RouterProtocol) -> UIViewController
     func createRegisterModule(router: RouterProtocol) -> UIViewController
     func createYearModule(router: RouterProtocol) -> UIViewController
-    func createEventModule(router: RouterProtocol, event: EventSettings.Event?, onDismiss: (() -> Void)?) -> UIViewController
+    func createEventModule(router: RouterProtocol, event: EventSettings.Event?) -> UIViewController
     func createDayModel(router: RouterProtocol, day: Day) -> UIViewController
 }
 
@@ -46,7 +46,7 @@ final class Builder: BuilderProtocol {
         return view
     }
     
-    func createEventModule(router: RouterProtocol, event: EventSettings.Event?, onDismiss: (() -> Void)?) -> UIViewController {
+    func createEventModule(router: RouterProtocol, event: EventSettings.Event?) -> UIViewController {
         let viewModel = EventViewModel()
         let coreDataManager = CoreDataManager()
         let notificationManager = NotificationManager()

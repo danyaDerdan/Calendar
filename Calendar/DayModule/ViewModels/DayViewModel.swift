@@ -45,9 +45,7 @@ final class DayViewModel: DayViewModelProtocol {
     }
     
     func buttonTapped(tag: Int) {
-        router?.showEventModule(event: getEvents()[tag], onDismiss: { [weak self] in
-            self?.sendViewData()
-        })
+        router?.showEventModule(event: getEvents()[tag])
     }
     
     func viewDidLoad() {
