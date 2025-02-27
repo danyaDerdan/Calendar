@@ -15,6 +15,7 @@ class DayCell: UICollectionViewCell {
     var viewModel: YearViewModelProtocol?
     var button: UIButton?
     var day: Day?
+    private lazy var circle = UIView()
     
     public func configure(with day: Day, viewModel: YearViewModelProtocol) {
         button = createButton()
@@ -27,10 +28,11 @@ class DayCell: UICollectionViewCell {
     private func setup(_ day: Day) {
         backgroundColor = .white
         button?.addTarget(self, action: #selector(buttonTapped), for: .touchDown)
+        addCircle(on: button ?? UIButton())
         if viewModel?.dateManager?.isDayInWeekend(day) ?? false {
             button?.setTitleColor(Constants.weekEndColor, for: .normal)
         }
-        if day.isEvented { addCircle(on: button ?? UIButton()) }
+        circle.isHidden = !day.isEvented
         
     }
     
@@ -44,6 +46,7 @@ class DayCell: UICollectionViewCell {
         button?.setTitle(nil, for: .normal)
         button?.backgroundColor = .white
         day = nil
+        circle.removeFromSuperview()
     }
 }
 
@@ -68,7 +71,6 @@ extension DayCell {
     }
     
     func addCircle(on view: UIView) {
-        let circle = UIView()
         circle.layer.cornerRadius = Constants.circleHeight/2
         circle.backgroundColor = .black
         view.addSubview(circle)

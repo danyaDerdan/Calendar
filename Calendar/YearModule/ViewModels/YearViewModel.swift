@@ -38,7 +38,4 @@ final class YearViewModel : YearViewModelProtocol {
     func dayCellTapped(day: Day?) {
         router?.showDayModule(with: day ?? Day(), yearViewModel: self)
     }
-    
-    
-
 }

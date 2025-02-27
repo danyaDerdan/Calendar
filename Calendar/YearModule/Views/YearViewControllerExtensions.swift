@@ -7,7 +7,7 @@ private struct Constants {
     static let buttonWidth: CGFloat = 60
     static let buttonInset: CGFloat = 30
     static let yearsCount: Int = 20
-    static let firstYear = 2024 //TO DO: More flexible
+    static let firstYear = 2025 //TO DO: More flexible
     static let cellSpacing: CGFloat = 0
 }
 

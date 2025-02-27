@@ -10,6 +10,7 @@ protocol DateManagerProtocol {
     func getStringOfDate(_ date: Date) -> String
     func getTimeOfDate(_ date: Date) -> String
     func isDayInWeekend(_ day: Day) -> Bool
+    func getCurrentYear() -> Int
 }
 
 final class DateManager: DateManagerProtocol {
@@ -67,6 +68,12 @@ final class DateManager: DateManagerProtocol {
         if Calendar.current.isDateInWeekend(date) { return true }
         return false
     }
+    
+    func getCurrentYear() -> Int {
+        dateFormatter.dateFormat = "yyyy"
+        return Int(dateFormatter.string(from: Date())) ?? 0
+    }
+    
 }
 
 
