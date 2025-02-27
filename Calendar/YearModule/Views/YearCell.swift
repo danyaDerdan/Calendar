@@ -2,16 +2,23 @@ import UIKit
 
 final class YearCell: UICollectionViewCell {
     
+    private struct Constants {
+        static let collectionTopInset: CGFloat = 80
+        static let verticalInset: CGFloat = 10
+        static let leadingInset: CGFloat = 20
+        static let offsetMultiplier = 465
+    }
+    
     var viewModel: YearViewModelProtocol?
     
     var firstDayOfYear: Int?
-    var year: Int!
+    var year: Int?
     
-    var days: [[Day]]!
-    var cellsIndexStart : [Int]!
+    var days: [[Day]]?
+    var cellsIndexStart : [Int]?
     
-    var collectionView: UICollectionView!
-    var yearLabel: UILabel!
+    var collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewLayout())
+    var yearLabel = UILabel()
     lazy var dayOfWeekLabels = createLabels()
     lazy var weekStackView = createWeekStackView()
     
@@ -19,16 +26,15 @@ final class YearCell: UICollectionViewCell {
         self.viewModel = viewModel
         self.year = year
         self.firstDayOfYear = firstDayOfYear
-
-
         setUp()
         
     }
     
     private func setUp() {
         backgroundColor = .systemGray6
-        days = viewModel!.getDays(of: year)
-        cellsIndexStart = viewModel!.dataManager.getCellsStartIndex(year: year!)
+        guard let viewModel, let year else { return }
+        days = viewModel.getDays(of: year)
+        cellsIndexStart = viewModel.dateManager?.getCellsStartIndex(year: year)
         yearLabel = createYearLabel()
         collectionView = createCollectionView()
         collectionView.delegate = self
@@ -37,21 +43,21 @@ final class YearCell: UICollectionViewCell {
         
        
         NSLayoutConstraint.activate([
-        collectionView.topAnchor.constraint(equalTo: topAnchor, constant: 80),
-        collectionView.bottomAnchor.constraint(equalTo: bottomAnchor),
-        collectionView.leadingAnchor.constraint(equalTo: leadingAnchor),
-        collectionView.trailingAnchor.constraint(equalTo: trailingAnchor),
-        
-        weekStackView.bottomAnchor.constraint(equalTo: collectionView.topAnchor, constant: -10),
-        weekStackView.widthAnchor.constraint(equalTo: collectionView.widthAnchor),
-        
-        yearLabel.bottomAnchor.constraint(equalTo: weekStackView.topAnchor, constant: -10),
-        yearLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20)
+            collectionView.topAnchor.constraint(equalTo: topAnchor, constant: Constants.collectionTopInset),
+            collectionView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            collectionView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            
+            weekStackView.bottomAnchor.constraint(equalTo: collectionView.topAnchor, constant: -Constants.verticalInset),
+            weekStackView.widthAnchor.constraint(equalTo: collectionView.widthAnchor),
+            
+            yearLabel.bottomAnchor.constraint(equalTo: weekStackView.topAnchor, constant: -Constants.verticalInset),
+            yearLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Constants.leadingInset)
         ])
         
-        let date = viewModel?.dataManager.getStringOfDate(Date()).split(separator: ".")
-        if date![2] == String(year) {
-            collectionView.setContentOffset(CGPoint(x: 0, y: 465*(Int(date![1]) ?? 1)-1), animated: true)
+        guard let date = viewModel.dateManager?.getStringOfDate(Date()).split(separator: ".") else { return }
+        if date[2] == String(year) {
+            collectionView.setContentOffset(CGPoint(x: 0, y: Constants.offsetMultiplier*(Int(date[1]) ?? 1)-1), animated: true)
         }
         
         
@@ -60,10 +66,7 @@ final class YearCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         
-        collectionView = nil
-        
-//        year = nil
-        //print("Prepared \(year)")
+//        collectionView = nil
         yearLabel.text = nil
     }
 }

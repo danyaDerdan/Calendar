@@ -1,14 +1,17 @@
+private struct Constants {
+    static let minLenght = 5
+    static let maxLenght = 20
+}
+
 protocol EntranceViewModelProtocol {
     var updateViewData: ((UserData) -> ())? { get set}
-    var router: RouterProtocol! {get set}
+    var router: RouterProtocol? {get set}
     func validateData(data: UserData.Data)
-    
-//    var networkService
 }
 
 final class RegisterViewModel: EntranceViewModelProtocol {
-    public var updateViewData: ((UserData) -> ())?
-    public var router: RouterProtocol!
+    var updateViewData: ((UserData) -> ())?
+    var router: RouterProtocol?
     
     init() {
         updateViewData?(.initial)
@@ -33,13 +36,13 @@ func validateData(data: UserData.Data) {
 private extension RegisterViewModel {
     func isValidLogin(login: String) -> Bool {
 //        if login.ЗАНЯТ { return false}
-        if 5 < login.count && login.count < 20 { return true}
+        if Constants.minLenght < login.count && login.count < Constants.maxLenght { return true}
         return false
     }
     
     func isValidPassword(password: String) -> Bool {
         var result = false
-        if 5 > password.count && password.count < 20 { return false}
+        if Constants.minLenght > password.count && password.count < Constants.maxLenght { return false}
         for i in "#$%&'()*+" {
             if password.contains(i) { result = true }
         }
