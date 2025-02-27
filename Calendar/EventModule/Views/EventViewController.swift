@@ -1,16 +1,48 @@
 import UIKit
 
+private struct Constants {
+    static let namePlaceholder = "Name"
+    static let descriptionPlaceholder = "Description"
+    static let saveButtonTitle = "Save"
+    static let lineHeight: CGFloat = 1
+    static let stackSpacing: CGFloat = 10
+    static let cornerRadius: CGFloat = 16
+    static let stackLeadigInset: CGFloat = 20
+    static let stackVerticalInset: CGFloat = 10
+    static let textFieldVerticalInset: CGFloat = 100
+    static let textFieldWidthMultiplier: CGFloat = 0.9
+    static let textFieldHeight: CGFloat = 100
+    static let dateViewVerticalInset: CGFloat = 50
+    static let eventTitle = "Event"
+    static let eventLabelFont : UIFont = .systemFont(ofSize: 20, weight: .bold)
+    static let exitImageName = "chevron.up"
+    static let navigationStackInset: CGFloat = 40
+    static let navigationStackWidthMultiplier: CGFloat = 0.8
+    static let notificationTitle = "Notification"
+    static let notificationCornerRadius: CGFloat = 16
+    static let notificationViewInset: CGFloat = 20
+    static let notificationViewHeight: CGFloat = 50
+    static let notificationViewWidthMultiplier: CGFloat = 0.9
+    static let datePickerMinuteInterval = 5
+    static let countOfYears = 9
+    static let dateViewCornerRadius: CGFloat = 16
+    static let dateViewStackSpacing: CGFloat = 6
+    static let startWord = "Начало"
+    static let endWord = "Конец"
+    static let countOfMinutes: Double = 60
+}
+
 final class EventViewController: UIViewController {
     
-    var viewModel: EventViewModelProtocol!
+    var viewModel: EventViewModelProtocol?
     var viewData: EventSettings = .invalid {
         didSet {
             updateView()
         }
     }
     
-    lazy var nameTextField = createTextField(placeholder: "Name")
-    lazy var descriptionTextField = createTextField(placeholder: "Description")
+    lazy var nameTextField = createTextField(placeholder: Constants.namePlaceholder)
+    lazy var descriptionTextField = createTextField(placeholder: Constants.descriptionPlaceholder)
     lazy var saveButton = createSaveButton()
     lazy var textFieldsView = createTextFieldsView()
     lazy var startDatePicker = createStartDatePicker()
@@ -22,21 +54,21 @@ final class EventViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemGray6
-        setUpUI()
+        setupUI()
         updateView()
         nameTextField.delegate = self
         descriptionTextField.delegate = self
         startDatePicker.addTarget(self, action: #selector(startDatePickerValueChanged), for: .valueChanged)
-        if let event = viewModel.event {
+        if let event = viewModel?.event {
             nameTextField.text = event.name
-            startDatePicker.date = event.start
-            endDatePicker.date = event.end
+            startDatePicker.setDate(event.start, animated: true)
+            endDatePicker.setDate(event.end, animated: true)
             notificationSwitch.isOn = event.notification
         }
     }
     
     func updateView() {
-        viewModel.updateViewData = { [weak self] viewData in
+        viewModel?.updateViewData = { [weak self] viewData in
             self?.viewData = viewData
             switch viewData {
             case .invalid:
@@ -63,55 +95,52 @@ extension EventViewController: UITextFieldDelegate{
     func createTextFieldsView() -> UIView {
         let stackView = UIStackView(arrangedSubviews: [nameTextField, descriptionTextField])
         stackView.axis = .vertical
-        stackView.spacing = 10
+        stackView.spacing = Constants.stackSpacing
         stackView.distribution = .fillEqually
         
         let view = UIView()
         view.backgroundColor = .white
-        view.layer.cornerRadius = 16
+        view.layer.cornerRadius = Constants.cornerRadius
         
         let line = UIView()
         view.addSubview(line)
         line.backgroundColor = .systemGray6
         line.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            line.heightAnchor.constraint(equalToConstant: 1),
-            line.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            line.heightAnchor.constraint(equalToConstant: Constants.lineHeight),
+            line.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.stackLeadigInset),
             line.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             line.centerXAnchor.constraint(equalTo: view.centerXAnchor)
             ])
         
-        
         view.addSubview(stackView)
         stackView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: view.topAnchor, constant: 10),
-            stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -10),
-            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            stackView.topAnchor.constraint(equalTo: view.topAnchor, constant: Constants.stackVerticalInset),
+            stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -Constants.stackVerticalInset),
+            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.stackLeadigInset),
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
             ])
-
-        
         return view
     }
     
-    func setUpUI() {
+    func setupUI() {
         view.addSubview(textFieldsView)
         textFieldsView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            textFieldsView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 100),
+            textFieldsView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: Constants.textFieldVerticalInset),
             textFieldsView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            textFieldsView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.9),
-            textFieldsView.heightAnchor.constraint(equalToConstant: 100)
+            textFieldsView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: Constants.textFieldWidthMultiplier),
+            textFieldsView.heightAnchor.constraint(equalToConstant: Constants.textFieldHeight)
             ])
         
         view.addSubview(dateView)
         dateView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            dateView.topAnchor.constraint(equalTo: textFieldsView.bottomAnchor, constant: 50),
+            dateView.topAnchor.constraint(equalTo: textFieldsView.bottomAnchor, constant: Constants.dateViewVerticalInset),
             dateView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            dateView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.9),
-            dateView.heightAnchor.constraint(equalToConstant: 100)
+            dateView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: Constants.textFieldWidthMultiplier),
+            dateView.heightAnchor.constraint(equalToConstant: Constants.textFieldHeight)
             ])
         
         addNavigationStackView()
@@ -120,7 +149,7 @@ extension EventViewController: UITextFieldDelegate{
     
     func createSaveButton() -> UIButton {
         let saveButton = UIButton(type: .system)
-        saveButton.setTitle("Save", for: .normal)
+        saveButton.setTitle(Constants.saveButtonTitle, for: .normal)
         saveButton.tintColor = .systemGray
         saveButton.isEnabled = false
         saveButton.addTarget(self, action: #selector(save), for: .touchUpInside)
@@ -129,26 +158,26 @@ extension EventViewController: UITextFieldDelegate{
     
     func addNavigationStackView() {
         let label = UILabel()
-        label.text = "Event"
-        label.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+        label.text = Constants.eventTitle
+        label.font = Constants.eventLabelFont
         label.textColor = .black
         label.textAlignment = .center
         
         let exitButton = UIButton(type: .system)
-        exitButton.setImage(UIImage(systemName: "chevron.up"), for: .normal)
+        exitButton.setImage(UIImage(systemName: Constants.exitImageName), for: .normal)
         exitButton.tintColor = .systemPurple
         exitButton.addTarget(self, action: #selector(exit), for: .touchUpInside)
         
         let stackView = UIStackView(arrangedSubviews: [exitButton, label, saveButton])
         stackView.axis = .horizontal
-        stackView.distribution = .fill
+        stackView.distribution = .equalSpacing
         
         view.addSubview(stackView)
         stackView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            stackView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 40),
-            stackView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8)
+            stackView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: Constants.navigationStackInset),
+            stackView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: Constants.navigationStackWidthMultiplier)
         ])
     }
     
@@ -156,8 +185,8 @@ extension EventViewController: UITextFieldDelegate{
         let view = UIView()
         self.view.addSubview(view)
         view.backgroundColor = .white
-        view.layer.cornerRadius = 16
-        let label = createLabel(word: "Notification")
+        view.layer.cornerRadius = Constants.notificationCornerRadius
+        let label = createLabel(word: Constants.notificationTitle)
         
         let notificationsStackView = UIStackView(arrangedSubviews: [label, notificationSwitch])
         notificationsStackView.axis = .horizontal
@@ -168,14 +197,15 @@ extension EventViewController: UITextFieldDelegate{
         NSLayoutConstraint.activate([
             notificationsStackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             notificationsStackView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            notificationsStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20)
+            notificationsStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.notificationViewInset),
+            notificationsStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.notificationViewInset)
             ])
         
         view.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-        view.widthAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.widthAnchor, multiplier: 0.9),
-        view.heightAnchor.constraint(equalToConstant: 50),
-        view.topAnchor.constraint(equalTo: dateView.bottomAnchor, constant: 50),
+            view.widthAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.widthAnchor, multiplier: Constants.notificationViewWidthMultiplier),
+            view.heightAnchor.constraint(equalToConstant: Constants.notificationViewHeight),
+            view.topAnchor.constraint(equalTo: dateView.bottomAnchor, constant: Constants.notificationViewInset),
         view.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)
         ])
         
@@ -184,9 +214,9 @@ extension EventViewController: UITextFieldDelegate{
     func createStartDatePicker() -> UIDatePicker {
         let datePicker = UIDatePicker()
         datePicker.datePickerMode = .dateAndTime
-        datePicker.minuteInterval = 5
-        datePicker.minimumDate = Calendar.current.date(byAdding: .minute, value: -5, to: Date())
-        datePicker.maximumDate = Calendar.current.date(byAdding: .year, value: 9, to: Date())
+        datePicker.minuteInterval = Constants.datePickerMinuteInterval
+        datePicker.minimumDate = viewModel?.event?.start ?? Date()
+        datePicker.maximumDate = Calendar.current.date(byAdding: .year, value: Constants.countOfYears, to: Date())
         datePicker.timeZone = Calendar.current.timeZone
         view.addSubview(datePicker)
         
@@ -197,11 +227,11 @@ extension EventViewController: UITextFieldDelegate{
     func createEndDatePicker() -> UIDatePicker {
         let datePicker = UIDatePicker()
         datePicker.datePickerMode = .dateAndTime
-        datePicker.minuteInterval = 5
-        datePicker.minimumDate = Calendar.current.date(byAdding: .minute, value: 5, to: startDatePicker.date)
-        datePicker.maximumDate = Calendar.current.date(byAdding: .year, value: 9, to: Date())
+        datePicker.minuteInterval = Constants.datePickerMinuteInterval
+        datePicker.minimumDate = viewModel?.event?.end ?? Date()
+        datePicker.maximumDate = Calendar.current.date(byAdding: .year, value: Constants.countOfYears, to: Date())
         datePicker.timeZone = Calendar.current.timeZone
-        datePicker.setDate(Calendar.current.date(byAdding: .hour, value: 1, to: startDatePicker.date)!, animated: true)
+        datePicker.setDate(Calendar.current.date(byAdding: .hour, value: 1, to: startDatePicker.date) ?? Date(), animated: true)
         view.addSubview(datePicker)
         
         return datePicker
@@ -210,10 +240,10 @@ extension EventViewController: UITextFieldDelegate{
     func createDateView() -> UIView{
         let view = UIView()
         view.backgroundColor = .white
-        view.layer.cornerRadius = 16
+        view.layer.cornerRadius = Constants.dateViewCornerRadius
         
-        let startStack = UIStackView(arrangedSubviews: [createLabel(word: "Начало"), startDatePicker])
-        let endStack = UIStackView(arrangedSubviews: [createLabel(word: "Конец"), endDatePicker])
+        let startStack = UIStackView(arrangedSubviews: [createLabel(word: Constants.startWord), startDatePicker])
+        let endStack = UIStackView(arrangedSubviews: [createLabel(word: Constants.endWord), endDatePicker])
         
         startStack.axis = .horizontal
         endStack.axis = .horizontal
@@ -223,14 +253,14 @@ extension EventViewController: UITextFieldDelegate{
 
         let stack = UIStackView(arrangedSubviews: [startStack, endStack])
         stack.axis = .vertical
-        stack.spacing = 6
+        stack.spacing = Constants.dateViewStackSpacing
         view.addSubview(stack)
         stack.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            stack.topAnchor.constraint(equalTo: view.topAnchor, constant: 10),
-            stack.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -10),
-            stack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            stack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
+            stack.topAnchor.constraint(equalTo: view.topAnchor, constant: Constants.stackVerticalInset),
+            stack.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -Constants.stackVerticalInset),
+            stack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.stackLeadigInset),
+            stack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.stackLeadigInset)
             ])
         
         let line = UIView()
@@ -238,8 +268,8 @@ extension EventViewController: UITextFieldDelegate{
         line.backgroundColor = .systemGray6
         line.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            line.heightAnchor.constraint(equalToConstant: 1),
-            line.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            line.heightAnchor.constraint(equalToConstant: Constants.lineHeight),
+            line.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.stackLeadigInset),
             line.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             line.centerXAnchor.constraint(equalTo: view.centerXAnchor)
             ])
@@ -251,7 +281,7 @@ extension EventViewController: UITextFieldDelegate{
     func createLabel(word: String) -> UILabel {
         let label = UILabel()
         label.text = word
-        label.font = UIFont.systemFont(ofSize: 20)
+        label.font = Constants.eventLabelFont
         label.textColor = .black
         label.textAlignment = .left
         return label
@@ -267,33 +297,28 @@ extension EventViewController: UITextFieldDelegate{
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
-            self.viewModel.validateData(name: textField.text ?? "" + string)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) { [weak self] in
+            self?.viewModel?.validateData(name: textField.text ?? "" + string)
         }
         return true
     }
     
     @objc func startDatePickerValueChanged() {
         if endDatePicker.date < startDatePicker.date {
-            endDatePicker.date = startDatePicker.date.addingTimeInterval(60*60)
+            endDatePicker.date = startDatePicker.date.addingTimeInterval(Constants.countOfMinutes*Constants.countOfMinutes)
         }
-        endDatePicker.minimumDate = startDatePicker.date.addingTimeInterval(60*5)
-        endDatePicker.date = startDatePicker.date.addingTimeInterval(60*60)
+        endDatePicker.minimumDate = startDatePicker.date.addingTimeInterval(Constants.countOfMinutes*Double(Constants.datePickerMinuteInterval))
+        endDatePicker.date = startDatePicker.date.addingTimeInterval(Constants.countOfMinutes*Constants.countOfMinutes)
     }
     
     @objc func save() {
-        if let event = viewModel.event {
-            viewModel.coreDataManager.deleteEvent(event: event)
-        }
-        let newEvent = EventSettings.Event(name: nameTextField.text ?? "",
-                                           description: descriptionTextField.text ?? "",
-                                           start: startDatePicker.date,
-                                           end: endDatePicker.date,
-                                           notification: notificationSwitch.isOn)
-        viewModel.coreDataManager.saveEvent(newEvent)
-        viewModel.reloadViews()
-        let notificationManager = NotificationManager()
-        notificationManager.addNotification(event: newEvent)
+        viewModel?.saveEvent(
+            name: nameTextField.text,
+            description: descriptionTextField.text,
+            start: startDatePicker.date,
+            end: endDatePicker.date,
+            notification: notificationSwitch.isOn
+        )
         exit()
     }
 }

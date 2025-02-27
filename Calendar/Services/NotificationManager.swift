@@ -7,7 +7,7 @@ protocol NotificationManagerProtocol {
 
 final class NotificationManager: NotificationManagerProtocol {
     
-    public func addNotification(event: EventSettings.Event) {
+    func addNotification(event: EventSettings.Event) {
         let notificationCenter = UNUserNotificationCenter.current()
         notificationCenter.getNotificationSettings { settings in
             switch settings.authorizationStatus {

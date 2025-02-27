@@ -1,35 +1,41 @@
-protocol YearViewModelProtocol { //cделаем календарь пока что на 10 лет
-    var dataManager: DataManagerProtocol! { get set }
-    var router: RouterProtocol! { get set }
+protocol YearViewModelProtocol {
+    var dateManager: DateManagerProtocol? { get }
     var updateViewData: (() -> Void)? { get set }
-    var coreDataManager: CoreDataManagerProtocol! { get set }
     func getDays(of year: Int) -> [[Day]]
+    func plusButtonTapped()
+    func dayCellTapped(day: Day?)
 }
 
 final class YearViewModel : YearViewModelProtocol {
-    public var dataManager: DataManagerProtocol!
-    public var router: RouterProtocol!
-    public var coreDataManager: CoreDataManagerProtocol!
-    public var updateViewData: (() -> Void)?
+    var dateManager: DateManagerProtocol?
+    var router: RouterProtocol?
+    var coreDataManager: CoreDataManagerProtocol?
+    var updateViewData: (() -> Void)?
     
     public func getDays(of year: Int) -> [[Day]] {
         var days = [[Day]]()
-        for i in 0..<12 {
+        for month in 0..<12 {
             days.append([])
-            for j in 0..<dataManager.getDaysInMonth(year: year, month: i) {
-                days[i].append(Day(number: j+1, month: i+1, year: year, isEvented: isDayEvented(day: j+1, month: i+1, year: year)))
+            for day in 0..<(dateManager?.getDaysInMonth(year: year, month: month) ?? 0) {
+                days[month].append(Day(number: day+1, month: month+1, year: year, isEvented: isDayEvented(day: day+1, month: month+1, year: year)))
             }
         }
         return days
     }
     
     private func isDayEvented(day: Int, month: Int, year: Int) -> Bool {
-        let events = coreDataManager.getEvents()
+        guard let events = coreDataManager?.getEvents() else { return false }
         for event in events {
-            if dataManager.getStringOfDate(event.start) == "\(day).\(month).\(year)" { return true }
-            
+            if dateManager?.getStringOfDate(event.start) == "\(day).\(month).\(year)" { return true }
         }
         return false
     }
-
+    
+    func plusButtonTapped() {
+        router?.showEventModule(event: nil, dayViewModel: nil, yearViewModel: self)
+    }
+    
+    func dayCellTapped(day: Day?) {
+        router?.showDayModule(with: day ?? Day(), yearViewModel: self)
+    }
 }

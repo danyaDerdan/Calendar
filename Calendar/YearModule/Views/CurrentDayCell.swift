@@ -1,6 +1,14 @@
 
 import UIKit
 
+private struct Constants {
+    static let backgroundColorTapped: UIColor = .black.withAlphaComponent(0.05)
+    static let backgroundColor: UIColor = .black.withAlphaComponent(0.01)
+    static let cornerRadius: CGFloat = 25
+    static let titleFont: UIFont = .boldSystemFont(ofSize: 30)
+    static let width: CGFloat = 50
+}
+
 class CurrentDayCell: UICollectionViewCell {
     
     public func configure(with day: Day) {
@@ -10,7 +18,7 @@ class CurrentDayCell: UICollectionViewCell {
     }
     
     @objc private func buttonTapped(sender: UIButton) {
-        sender.backgroundColor = .black.withAlphaComponent(0.05)
+        sender.backgroundColor = Constants.backgroundColorTapped
     }
 }
 
@@ -18,16 +26,16 @@ class CurrentDayCell: UICollectionViewCell {
 extension CurrentDayCell {
     func createButton(title: String) -> UIButton {
         let button = UIButton(type: .system)
-        button.backgroundColor = .black.withAlphaComponent(0.01)
+        button.backgroundColor = Constants.backgroundColor
         button.setTitleColor(.black, for: .normal)
         button.tintColor = .purple
         
         let view = UIView()
         view.backgroundColor = .systemPurple
-        view.layer.cornerRadius = 25
+        view.layer.cornerRadius = Constants.cornerRadius
         
         let label = UILabel()
-        label.font = .boldSystemFont(ofSize: 30)
+        label.font = Constants.titleFont
         label.textColor = .white
         label.text = title
         view.addSubview(label)
@@ -40,8 +48,8 @@ extension CurrentDayCell {
         NSLayoutConstraint.activate([
             view.centerXAnchor.constraint(equalTo: button.centerXAnchor),
             view.centerYAnchor.constraint(equalTo: button.centerYAnchor),
-            view.widthAnchor.constraint(equalToConstant: 50),
-            view.heightAnchor.constraint(equalToConstant: 50)
+            view.widthAnchor.constraint(equalToConstant: Constants.width),
+            view.heightAnchor.constraint(equalToConstant: Constants.width)
             ])
         
         

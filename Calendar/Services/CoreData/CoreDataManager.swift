@@ -16,7 +16,7 @@ final class CoreDataManager : CoreDataManagerProtocol{
     }()
     
     func entityForName(_ entityName: String) -> NSEntityDescription {
-        return NSEntityDescription.entity(forEntityName: entityName, in: context)!
+        return NSEntityDescription.entity(forEntityName: entityName, in: context) ?? NSEntityDescription()
     }
 
     lazy var persistentContainer: NSPersistentContainer = {
@@ -55,8 +55,8 @@ final class CoreDataManager : CoreDataManagerProtocol{
         var array = [EventSettings.Event]()
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Event")
         do {
-            let results = try context.fetch(fetchRequest)
-            for result in results as! [Event] {
+            let results = try context.fetch(fetchRequest) as? [Event]
+            for result in results ?? [] {
                 array.append(EventSettings.Event(name: result.name ?? "None",
                                                  description: "",
                                                  start: result.startDate ?? Date(),
@@ -71,11 +71,10 @@ final class CoreDataManager : CoreDataManagerProtocol{
     }
     
     func deleteEvent(event: EventSettings.Event) {
-        var array = [EventSettings.Event]()
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Event")
         do {
-            let results = try context.fetch(fetchRequest)
-            for result in results as! [Event] {
+            let results = try context.fetch(fetchRequest) as? [Event]
+            for result in results ?? [] {
                 if result.name == event.name && result.startDate == event.start {
                     context.delete(result)
                     saveContext()

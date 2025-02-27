@@ -1,18 +1,21 @@
 import Foundation
 
-protocol DataManagerProtocol {
+protocol DateManagerProtocol {
     func getDaysInMonth(year: Int, month: Int) -> Int
     func getMonthName(month: Int) -> String
     func getCellsStartIndex(year: Int) -> [Int]
     func getDayOfWeek(day: Int) -> String
-    func getFirstDayOfYear(year: Int) -> Int
+    func getFirstDayOfYear(_ year: Int) -> Int
     func getFirstMonthOfYear(year: Int) -> Int
     func getStringOfDate(_ date: Date) -> String
     func getTimeOfDate(_ date: Date) -> String
+    func isDayInWeekend(_ day: Day) -> Bool
+    func getCurrentYear() -> Int
 }
 
-final class DataManager: DataManagerProtocol {
-    private var constants: DataConstants = DataConstants()
+final class DateManager: DateManagerProtocol {
+    private var constants: DateConstants = DateConstants()
+    private var dateFormatter: DateFormatter = DateFormatter()
 
     func getDaysInMonth(year: Int, month: Int) -> Int {
         return year%4==0 && month == 1 ? 29 : constants.daysInMonthes[month]
@@ -23,7 +26,7 @@ final class DataManager: DataManagerProtocol {
     }
     
     func getCellsStartIndex(year: Int) -> [Int] {
-        var cellsStartIndex = [constants.yearsStartsWith[year-2024]]
+        var cellsStartIndex = [getFirstDayOfYear(year)]
         for i in 1..<12 {
             cellsStartIndex.append((cellsStartIndex[i-1] + getDaysInMonth(year: year, month: i-1))%7)
         }
@@ -34,15 +37,14 @@ final class DataManager: DataManagerProtocol {
         return constants.daysOfWeek[day]
     }
     
-    func getFirstDayOfYear(year: Int) -> Int {
-        return constants.yearsStartsWith[year-2024]
+    func getFirstDayOfYear(_ year: Int) -> Int {
+        return Calendar.current.component(.weekday, from: DateComponents(calendar: .current, year: year, month: 1, day: 0).date ?? Date())-1
     }
     
     func getFirstMonthOfYear(year: Int) -> Int {
-        let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "M.yyyy"
         let arr = dateFormatter.string(from: Date()).split(separator: ".")
-        let (month, curYear) = (Int(arr[0])!, Int(arr[1])!)
+        let (month, curYear) = (Int(arr[0]) ?? 0, Int(arr[1]) ?? 0)
         if year > curYear { return 0 }
         if year == curYear {
             return month - 1
@@ -51,16 +53,27 @@ final class DataManager: DataManagerProtocol {
     }
     
     func getStringOfDate(_ date: Date) -> String {
-        let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "d.M.yyyy"
         return dateFormatter.string(from: date)
     }
     
     func getTimeOfDate(_ date: Date) -> String {
-        let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "HH:mm"
         return dateFormatter.string(from: date)
     }
+    
+    func isDayInWeekend(_ day: Day) -> Bool {
+        dateFormatter.dateFormat = "d.M.yyyy"
+        guard let date = dateFormatter.date(from: "\(day.number).\(day.month).\(day.year)") else { return false }
+        if Calendar.current.isDateInWeekend(date) { return true }
+        return false
+    }
+    
+    func getCurrentYear() -> Int {
+        dateFormatter.dateFormat = "yyyy"
+        return Int(dateFormatter.string(from: Date())) ?? 0
+    }
+    
 }
 
 
