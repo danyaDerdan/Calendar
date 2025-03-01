@@ -9,12 +9,13 @@ final class YearViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemGray6
-        navigationController?.navigationBar.isHidden = true
         
         updateView()
         collectionView.delegate = self
         collectionView.dataSource = self
         plusButton.addTarget(self, action: #selector(plusButtonTapped), for: .touchUpInside)
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: createSettingsButton())
     }
     
     func updateView() {
@@ -27,4 +28,7 @@ final class YearViewController: UIViewController {
         viewModel?.plusButtonTapped()
     }
     
+    @objc func settingsButtonTapped() {
+        viewModel?.settingsButtonTapped()
+    }
 }
