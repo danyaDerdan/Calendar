@@ -13,7 +13,15 @@ private struct Constants {
     static let circleHeight: CGFloat = 20
     static let imageViewSize: CGFloat = 120
     static let imageTopInset: CGFloat = 80
+    static let personImage = "person.circle"
     static let colorText = "Theme color"
+    static let cornerRadiusDivider: CGFloat = 2
+    static let birhdayLabelText = "Birthday"
+    static let defaultSoundName: String = "Default"
+    static let criticalSoundName: String = "Critical"
+    static let soundLabelText = "Sound"
+    static let pickerLabelHeight: CGFloat = 32
+    static let labelPickerSpacing: CGFloat = 8
 }
 
 extension SettingsViewController {
@@ -33,11 +41,11 @@ extension SettingsViewController {
     }
     
     func createImageView() -> UIImageView {
-        let imageView = UIImageView(image: UIImage(systemName: "person.circle"))
+        let imageView = UIImageView(image: UIImage(systemName: Constants.personImage))
         view.addSubview(imageView)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
-        imageView.layer.cornerRadius = Constants.imageViewSize / 2
+        imageView.layer.cornerRadius = Constants.imageViewSize / Constants.cornerRadiusDivider
         NSLayoutConstraint.activate([
             imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             imageView.topAnchor.constraint(equalTo: view.topAnchor, constant: Constants.imageTopInset),
@@ -74,10 +82,10 @@ extension SettingsViewController {
         section.addSubview(label)
         label.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            picker.trailingAnchor.constraint(equalTo: section.trailingAnchor),
+            picker.trailingAnchor.constraint(equalTo: section.trailingAnchor, constant: -Constants.leadingInset),
             picker.centerYAnchor.constraint(equalTo: section.centerYAnchor),
             picker.widthAnchor.constraint(equalToConstant: Constants.pickerWidth),
-            picker.heightAnchor.constraint(equalTo: section.heightAnchor, multiplier: 2),
+            picker.heightAnchor.constraint(equalTo: section.heightAnchor, multiplier: Constants.cornerRadiusDivider),
             label.centerYAnchor.constraint(equalTo: section.centerYAnchor),
             label.leadingAnchor.constraint(equalTo: section.leadingAnchor, constant: Constants.leadingInset)
             ])
@@ -96,7 +104,7 @@ extension SettingsViewController {
             datePicker.trailingAnchor.constraint(equalTo: section.trailingAnchor, constant: -Constants.leadingInset)
         ])
         let label = UILabel()
-        label.text = "Birthday"
+        label.text = Constants.birhdayLabelText
         label.translatesAutoresizingMaskIntoConstraints = false
         section.addSubview(label)
         NSLayoutConstraint.activate([
@@ -110,11 +118,11 @@ extension SettingsViewController {
         let section = createSectionView()
         section.topAnchor.constraint(equalTo: colorView.bottomAnchor, constant: Constants.sectionSpacing).isActive = true
         let segmentedControl = UISegmentedControl()
-        segmentedControl.insertSegment(withTitle: "Default", at: 0, animated: true)
-        segmentedControl.insertSegment(withTitle: "Crtical", at: 1, animated: true)
+        segmentedControl.insertSegment(withTitle: Constants.defaultSoundName, at: 0, animated: true)
+        segmentedControl.insertSegment(withTitle: Constants.criticalSoundName, at: 1, animated: true)
         segmentedControl.selectedSegmentIndex = 0
         let label = UILabel()
-        label.text = "Sound"
+        label.text = Constants.soundLabelText
         label.textAlignment = .left
         let stack = UIStackView(arrangedSubviews: [label, segmentedControl])
         stack.axis = .horizontal
@@ -146,14 +154,14 @@ extension SettingsViewController {
             view.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
-        circle.layer.cornerRadius = 16
+        circle.layer.cornerRadius = Constants.pickerLabelHeight / Constants.cornerRadiusDivider
         NSLayoutConstraint.activate([
             circle.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             circle.heightAnchor.constraint(equalTo: view.heightAnchor),
             circle.widthAnchor.constraint(equalTo: view.heightAnchor),
             circle.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             label.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            label.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8)
+            label.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.labelPickerSpacing)
         ])
         
         return view
@@ -174,6 +182,6 @@ extension SettingsViewController: UIPickerViewDataSource, UIPickerViewDelegate {
     }
     
     func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
-        return 32
+        return Constants.pickerLabelHeight
     }
 }
