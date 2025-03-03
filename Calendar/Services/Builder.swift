@@ -54,6 +54,7 @@ final class Builder: BuilderProtocol {
         viewModel.yearViewModel = yearViewModel
         viewModel.dayViewModel = dayViewModel
         viewModel.event = event
+        viewModel.userDefaultsManager = userDefaultsManager
         let view = EventViewController()
         view.viewModel = viewModel
         return view

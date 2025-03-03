@@ -20,6 +20,7 @@ final class EventViewModel: EventViewModelProtocol {
     var yearViewModel: YearViewModelProtocol?
     var dayViewModel: DayViewModelProtocol?
     var notificationManager: NotificationManagerProtocol?
+    var userDefaultsManager: UserDefaultsManagerProtocol?
     
     func validateData(name: String) {
         if !name.isEmpty {
@@ -44,7 +45,10 @@ final class EventViewModel: EventViewModelProtocol {
                                            notification: notification)
         coreDataManager?.saveEvent(newEvent)
         reloadViews()
-        notificationManager?.addNotification(event: newEvent)
+        if notification { notificationManager?.addNotification(name: newEvent.name,
+                                                               start: start,
+                                                               end: end,
+                                                               sound: userDefaultsManager?.getSettings().notificationSound ?? "default") }
     }
     
     
