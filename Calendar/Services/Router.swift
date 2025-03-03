@@ -52,6 +52,6 @@ final class Router: RouterProtocol {
     }
     
     func showSettingsModule() {
-        navigationController.pushViewController(builder.createSettingsModule(router: self), animated: true)
+        navigationController.pushViewController(builder.createSettingsModule(), animated: true)
     }
 }

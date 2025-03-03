@@ -7,7 +7,7 @@ protocol BuilderProtocol {
     func createYearModule(router: RouterProtocol) -> UIViewController
     func createEventModule(router: RouterProtocol, event: EventSettings.Event?, dayViewModel: DayViewModelProtocol?, yearViewModel: YearViewModelProtocol?) -> UIViewController
     func createDayModel(router: RouterProtocol, day: Day, yearViewModel: YearViewModelProtocol?) -> UIViewController
-    func createSettingsModule(router: RouterProtocol) -> UIViewController
+    func createSettingsModule() -> UIViewController
 }
 
 final class Builder: BuilderProtocol {
@@ -73,9 +73,11 @@ final class Builder: BuilderProtocol {
         return view
     }
     
-    func createSettingsModule(router: RouterProtocol) -> UIViewController {
+    func createSettingsModule() -> UIViewController {
         let viewModel = SettingsViewModel()
         let view = SettingsViewController()
+        let userDefaultsManager = UserDefaultsManager()
+        viewModel.userDefaultsManager = userDefaultsManager
         view.viewModel = viewModel
         return view
     }

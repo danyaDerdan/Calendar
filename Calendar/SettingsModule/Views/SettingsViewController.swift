@@ -14,6 +14,14 @@ final class SettingsViewController: UIViewController {
         soundView.translatesAutoresizingMaskIntoConstraints = false
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        viewModel?.viewWillDissappear(name: nameView.textField?.text,
+                                      birthday: birthdayView.datePicker?.date,
+                                      themeColor: getSelectedColor(),
+                                      notificationSound: getSelectedSound())
+        super.viewWillDisappear(animated)
+    }
+    
     
     
     

@@ -26,10 +26,9 @@ final class UserDefaultsManager: UserDefaultsManagerProtocol {
     func getSettings() -> (name: String, birthday: Date, themeColor: String, notificationSound: String) {
         let name = userDefaults.string(forKey: Keys.nameKey) ?? ""
         let birthday = userDefaults.object(forKey: Keys.birthdayKey) as? Date ?? Date()
-        let themeColor = userDefaults.string(forKey: Keys.themeColorKey) ?? "red"
-        let notificationSound = userDefaults.string(forKey: Keys.notificationSoundKey) ?? "default"
+        let themeColor = userDefaults.string(forKey: Keys.themeColorKey) ?? ""
+        let notificationSound = userDefaults.string(forKey: Keys.notificationSoundKey) ?? ""
         return (name, birthday, themeColor, notificationSound)
-        
     }
     
 }

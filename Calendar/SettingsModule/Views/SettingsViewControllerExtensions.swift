@@ -7,7 +7,7 @@ private struct Constants {
     static let placeholderText: String = "Name"
     static let leadingInset: CGFloat = 20
     static let sectionSpacing: CGFloat = 40
-    static let colorNames = ["Red", "Blue", "Yellow", "Green"]
+    static let colorNames = ["Blue", "Green", "Pink", "Purple"]
     static let columnsInPicker: Int = 1
     static let pickerWidth: CGFloat = 120
     static let circleHeight: CGFloat = 20
@@ -22,23 +22,11 @@ private struct Constants {
     static let soundLabelText = "Sound"
     static let pickerLabelHeight: CGFloat = 32
     static let labelPickerSpacing: CGFloat = 8
+    static let alphaComponent: CGFloat = 0.5
+    static let soundsIndexes: [String: Int] = ["Default": 0, "Critical": 1]
 }
 
 extension SettingsViewController {
-    
-    private func createSectionView() -> UIView {
-        let view = UIView()
-        view.backgroundColor = .white
-        view.layer.cornerRadius = Constants.cornerRadius
-        view.translatesAutoresizingMaskIntoConstraints = false
-        self.view.addSubview(view)
-        NSLayoutConstraint.activate([
-            view.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            view.heightAnchor.constraint(equalToConstant: Constants.sectionViewHeight),
-            view.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: Constants.widthMultiplier)
-            ])
-        return view
-    }
     
     func createImageView() -> UIImageView {
         let imageView = UIImageView(image: UIImage(systemName: Constants.personImage))
@@ -55,10 +43,12 @@ extension SettingsViewController {
         return imageView
     }
     
-    func createNameView() -> UIView {
-        let section = createSectionView()
-        section.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: Constants.sectionSpacing).isActive = true
+    func createNameView() -> SectionView {
         let textField = UITextField()
+        let section = SectionView(view: view, textField: textField)
+        section.setupUI()
+        section.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: Constants.sectionSpacing).isActive = true
+        textField.text = viewModel?.settings.name
         textField.placeholder = Constants.placeholderText
         textField.translatesAutoresizingMaskIntoConstraints = false
         section.addSubview(textField)
@@ -69,12 +59,21 @@ extension SettingsViewController {
         return section
     }
     
-    func createColorView() -> UIView {
-        let section = createSectionView()
-        section.topAnchor.constraint(equalTo: birthdayView.bottomAnchor, constant: Constants.sectionSpacing).isActive = true
+    func createColorView() -> SectionView {
         let picker = UIPickerView()
+        let section = SectionView(view: view, picker: picker)
+        section.setupUI()
+        section.topAnchor.constraint(equalTo: birthdayView.bottomAnchor, constant: Constants.sectionSpacing).isActive = true
         picker.delegate = self
         picker.dataSource = self
+        let selectedRow = switch viewModel?.settings.themeColor {
+        case .blue: 0
+        case .green: 1
+        case .pink: 2
+        case .purple: 3
+        case nil: 0
+        }
+        picker.selectRow(selectedRow, inComponent: 0, animated: true)
         section.addSubview(picker)
         picker.translatesAutoresizingMaskIntoConstraints = false
         let label = UILabel()
@@ -89,14 +88,17 @@ extension SettingsViewController {
             label.centerYAnchor.constraint(equalTo: section.centerYAnchor),
             label.leadingAnchor.constraint(equalTo: section.leadingAnchor, constant: Constants.leadingInset)
             ])
+        picker.selectedRow(inComponent: 0)
         return section
     }
     
-    func createBirthdayView() -> UIView {
-        let section = createSectionView()
-        section.topAnchor.constraint(equalTo: nameView.bottomAnchor, constant: Constants.sectionSpacing).isActive = true
+    func createBirthdayView() -> SectionView {
         let datePicker = UIDatePicker()
+        let section = SectionView(view: view, datePicker: datePicker)
+        section.setupUI()
+        section.topAnchor.constraint(equalTo: nameView.bottomAnchor, constant: Constants.sectionSpacing).isActive = true
         datePicker.datePickerMode = .date
+        datePicker.date = viewModel?.settings.birthday ?? Date()
         section.addSubview(datePicker)
         datePicker.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -114,13 +116,18 @@ extension SettingsViewController {
         return section
     }
     
-    func createSoundView() -> UIView {
-        let section = createSectionView()
-        section.topAnchor.constraint(equalTo: colorView.bottomAnchor, constant: Constants.sectionSpacing).isActive = true
+    func createSoundView() -> SectionView {
         let segmentedControl = UISegmentedControl()
+        let section = SectionView(view: view, segmentedControl: segmentedControl)
+        section.setupUI()
+        section.topAnchor.constraint(equalTo: colorView.bottomAnchor, constant: Constants.sectionSpacing).isActive = true
         segmentedControl.insertSegment(withTitle: Constants.defaultSoundName, at: 0, animated: true)
         segmentedControl.insertSegment(withTitle: Constants.criticalSoundName, at: 1, animated: true)
-        segmentedControl.selectedSegmentIndex = 0
+        segmentedControl.selectedSegmentIndex = switch viewModel?.settings.notificationSound {
+        case .defaultSound: 0
+        case .critical: 1
+        case nil: 0
+        }
         let label = UILabel()
         label.text = Constants.soundLabelText
         label.textAlignment = .left
@@ -137,13 +144,20 @@ extension SettingsViewController {
         return section
     }
     
+    func getSelectedColor() -> String {
+        return Constants.colorNames[colorView.picker?.selectedRow(inComponent: 0) ?? 0].lowercased()
+    }
+    
+    func getSelectedSound() -> String {
+        return soundView.segmentedControl?.selectedSegmentIndex == 0 ? "default" : "critical"
+    }
+    
     private func createColorLabel(stringColor: String) -> UIView {
-        var color = UIColor.red.withAlphaComponent(0.5)
-        switch stringColor {
-        case "Blue": color = .blue.withAlphaComponent(0.5)
-        case "Green": color = .green.withAlphaComponent(0.5)
-        case "Yellow": color = .yellow.withAlphaComponent(0.5)
-        default: break
+        let color: UIColor = switch stringColor {
+        case "Green": .green.withAlphaComponent(Constants.alphaComponent)
+        case "Pink": .systemPink.withAlphaComponent(Constants.alphaComponent)
+        case "Purple": .purple.withAlphaComponent(Constants.alphaComponent)
+        default: .blue.withAlphaComponent(Constants.alphaComponent)
         }
         let view = UIView()
         let label = UILabel()
