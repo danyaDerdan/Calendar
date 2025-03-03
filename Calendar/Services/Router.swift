@@ -11,6 +11,7 @@ protocol RouterProtocol {
     func showYearModule()
     func showEventModule(event: EventSettings.Event?, dayViewModel: DayViewModelProtocol?, yearViewModel: YearViewModelProtocol?)
     func showDayModule(with day: Day, yearViewModel: YearViewModelProtocol?)
+    func showSettingsModule()
 }
 
 final class Router: RouterProtocol {
@@ -48,5 +49,9 @@ final class Router: RouterProtocol {
     }
     func showDayModule(with day: Day, yearViewModel: YearViewModelProtocol?) {
         navigationController.pushViewController(builder.createDayModel(router: self, day: day, yearViewModel: yearViewModel), animated: true)
+    }
+    
+    func showSettingsModule() {
+        navigationController.pushViewController(builder.createSettingsModule(), animated: true)
     }
 }

@@ -80,7 +80,13 @@ final class DayViewController: UIViewController {
     
     func addEvent(_ event: EventSettings.Event, _ index: Int) {
         let block = UIButton(type: .system)
-        block.backgroundColor = .systemCyan.withAlphaComponent(Constants.blockAlpha)
+        let color : UIColor = switch viewModel?.getThemeColor() {
+        case "pink": .systemPink
+        case "green": .green
+        case "purple": .purple
+        default: .systemCyan
+        }
+        block.backgroundColor = color.withAlphaComponent(Constants.blockAlpha)
         block.layer.cornerRadius = Constants.blockCornerRadius
         
         let height = event.start.distance(to: event.end)/Constants.hourHeight
@@ -94,7 +100,7 @@ final class DayViewController: UIViewController {
                                              left: Constants.blockLeftPadding,
                                              bottom: Constants.defaultInset,
                                              right: Constants.defaultInset)
-        block.titleLabel?.textColor = .systemCyan
+        block.titleLabel?.tintColor = color
         block.isEnabled = true
         block.tag = index
 

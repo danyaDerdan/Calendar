@@ -7,9 +7,12 @@ protocol BuilderProtocol {
     func createYearModule(router: RouterProtocol) -> UIViewController
     func createEventModule(router: RouterProtocol, event: EventSettings.Event?, dayViewModel: DayViewModelProtocol?, yearViewModel: YearViewModelProtocol?) -> UIViewController
     func createDayModel(router: RouterProtocol, day: Day, yearViewModel: YearViewModelProtocol?) -> UIViewController
+    func createSettingsModule() -> UIViewController
 }
 
 final class Builder: BuilderProtocol {
+    let coreDataManager: CoreDataManagerProtocol = CoreDataManager()
+    let userDefaultsManager: UserDefaultsManagerProtocol = UserDefaultsManager()
     
     func createLaunchModule(router: RouterProtocol) -> UIViewController {
         let viewModel = LaunchViewModel()
@@ -36,7 +39,6 @@ final class Builder: BuilderProtocol {
         let viewModel = YearViewModel()
         let view = YearViewController()
         let dataManager = DateManager()
-        let coreDataManager = CoreDataManager()
         viewModel.router = router
         viewModel.dateManager = dataManager
         viewModel.coreDataManager = coreDataManager
@@ -46,13 +48,13 @@ final class Builder: BuilderProtocol {
     
     func createEventModule(router: RouterProtocol, event: EventSettings.Event?, dayViewModel: DayViewModelProtocol?, yearViewModel: YearViewModelProtocol?) -> UIViewController {
         let viewModel = EventViewModel()
-        let coreDataManager = CoreDataManager()
         let notificationManager = NotificationManager()
         viewModel.coreDataManager = coreDataManager
         viewModel.notificationManager = notificationManager
         viewModel.yearViewModel = yearViewModel
         viewModel.dayViewModel = dayViewModel
         viewModel.event = event
+        viewModel.userDefaultsManager = userDefaultsManager
         let view = EventViewController()
         view.viewModel = viewModel
         return view
@@ -60,14 +62,22 @@ final class Builder: BuilderProtocol {
     
     func createDayModel(router: RouterProtocol, day: Day, yearViewModel: YearViewModelProtocol?) -> UIViewController {
         let viewModel = DayViewModel()
-        let coreDataManager = CoreDataManager()
         let dateManager = DateManager()
         viewModel.yearViewModel = yearViewModel
         viewModel.day = day
         viewModel.router = router
         viewModel.coreDataManager = coreDataManager
         viewModel.dateManager = dateManager
+        viewModel.userDefaultsManager = userDefaultsManager
         let view = DayViewController()
+        view.viewModel = viewModel
+        return view
+    }
+    
+    func createSettingsModule() -> UIViewController {
+        let viewModel = SettingsViewModel()
+        let view = SettingsViewController()
+        viewModel.userDefaultsManager = userDefaultsManager
         view.viewModel = viewModel
         return view
     }

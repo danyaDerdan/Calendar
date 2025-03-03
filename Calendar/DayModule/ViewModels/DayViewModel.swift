@@ -7,12 +7,14 @@ protocol DayViewModelProtocol {
     func getEvents() -> [EventSettings.Event]
     func buttonTapped(tag: Int)
     func viewDidLoad()
+    func getThemeColor() -> String?
 }
 
 final class DayViewModel: DayViewModelProtocol {
     var yearViewModel: YearViewModelProtocol?
     var router: RouterProtocol?
     var coreDataManager: CoreDataManagerProtocol?
+    var userDefaultsManager: UserDefaultsManagerProtocol?
     var dateManager: DateManagerProtocol?
     var day: Day?
     var updateViewData: ((DayViewState) -> Void)?
@@ -61,6 +63,10 @@ final class DayViewModel: DayViewModelProtocol {
         else {
             updateViewData?(.error)
         }
+    }
+    
+    func getThemeColor() -> String? {
+        return userDefaultsManager?.getSettings().themeColor
     }
     
     

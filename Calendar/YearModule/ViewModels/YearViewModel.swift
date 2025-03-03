@@ -4,6 +4,7 @@ protocol YearViewModelProtocol {
     func getDays(of year: Int) -> [[Day]]
     func plusButtonTapped()
     func dayCellTapped(day: Day?)
+    func settingsButtonTapped()
 }
 
 final class YearViewModel : YearViewModelProtocol {
@@ -37,5 +38,9 @@ final class YearViewModel : YearViewModelProtocol {
     
     func dayCellTapped(day: Day?) {
         router?.showDayModule(with: day ?? Day(), yearViewModel: self)
+    }
+    
+    func settingsButtonTapped() {
+        router?.showSettingsModule()
     }
 }

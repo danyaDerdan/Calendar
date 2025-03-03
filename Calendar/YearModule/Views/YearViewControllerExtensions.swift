@@ -4,6 +4,7 @@ private struct Constants {
     static let bottomInset: CGFloat = 100
     static let yearCellIdentifier = "YearCell"
     static let plusImageName = "plus.circle.fill"
+    static let gearImageName = "gear"
     static let buttonWidth: CGFloat = 60
     static let buttonInset: CGFloat = 30
     static let yearsCount: Int = 20
@@ -19,11 +20,12 @@ extension YearViewController {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.isPagingEnabled = true
         collectionView.showsHorizontalScrollIndicator = false
+        collectionView.backgroundColor = .systemGray6
         view.addSubview(collectionView)
   
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            collectionView.topAnchor.constraint(equalTo: view.topAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -Constants.bottomInset),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor) ])
@@ -50,6 +52,15 @@ extension YearViewController {
             
         ])
         
+        return button
+    }
+    
+    func createSettingsButton() -> UIButton {
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(systemName: Constants.gearImageName), for: .normal)
+        button.tintColor = .systemPurple
+        button.imageView?.contentMode = .scaleAspectFit
+        button.addTarget(self, action: #selector(settingsButtonTapped), for: .touchUpInside)
         return button
     }
 }
