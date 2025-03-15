@@ -4,7 +4,7 @@ import CoreData
 protocol CoreDataManagerProtocol {
     var context: NSManagedObjectContext { get }
     func saveContext()
-    func saveEvent(_ event: EventSettings.Event)
+    func saveEvent(_ event: EventSettings.Event) //REDO EventModel to ViewModel
     func getEvents() -> [EventSettings.Event]
     func deleteEvent(event: EventSettings.Event)
 }
